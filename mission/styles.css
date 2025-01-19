@@ -37,8 +37,22 @@ body {
   }
   
   /* Resize logo image */
-  .logo {
+  #logo {
     width: 150px;
     height: auto;
   }
-  
+
+  body.light {
+    background-color: white;
+    color: black;
+}
+
+/* Styles for the dark theme */
+  body.dark {
+    background-color: #333;
+    color: white;
+}
+
+  body.dark h2 {
+    color: #4F9ACF;
+  }
