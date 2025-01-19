@@ -8,7 +8,8 @@ function changeTheme(event) {
     if (selectedTheme === 'dark') {
         document.body.classList.add('dark'); // Add the dark class to the body
         logo.src = 'byui-logo_white.png'; // Update to the white logo
-    } else {
+    } 
+    else {
         document.body.classList.remove('dark'); // Remove the dark class
         logo.src = 'byui-logo_blue.webp'; // Update to the blue logo
     }
