@@ -1,0 +1,60 @@
+/*Roboto font */
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Header styling */
+header {
+    background-color: #007acc;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+    max-width: 640px;
+    margin: 1rem auto;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Main styling */
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    max-width: 640px;
+    margin: 1rem auto;
+    padding: 1rem;
+    background-color: #007acc;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+section {
+    padding: 1rem;
+    background-color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Footer styling */
+footer {
+    text-align: center;
+    padding: 1rem;
+    max-width: 640px;
+    margin: 1rem auto;
+    background-color: #007acc;
+    color: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* Media query 
+Viewport width of 500px or greater */
+@media screen and (min-width: 500px) {
+    header {
+        background-color: black; /* Change header background to black */
+        color: white; /* Change header text to white */
+    }
+
+    main {
+        grid-template-columns: 1fr 1fr; /* Display two columns */
+    }
+}
