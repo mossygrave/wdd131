@@ -1,0 +1,131 @@
+
+/* Import the Mooli font */
+@import url("https://fonts.googleapis.com/css2?family=Mooli&display=swap");
+
+/* General reset and font setup */
+/* General reset and font setup */
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    line-height: 1.6;
+}
+
+h1, h2 {
+    font-family: 'Mooli', sans-serif;
+    margin: 0.5rem 0;
+}
+
+header {
+    background-color: #007ACC;
+    color: white;
+    padding: 1rem;
+    text-align: center;
+    position: relative;
+}
+
+header nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: none; /* Hide navigation by default on small screens */
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+}
+
+header nav ul.show {
+    display: flex; /* Show navigation when "Menu" button is pressed */
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+header button {
+    background: none;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    font-size: 1rem;
+    font-family: inherit;
+    cursor: pointer;
+    padding: 0.5rem 1rem;
+}
+
+header button:focus {
+    outline: none;
+}
+
+main {
+    padding: 2rem;
+    text-align: center;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr; /* Single column by default */
+    gap: 1rem;
+    margin: 2rem auto;
+    max-width: 800px;
+}
+
+.gallery figure {
+    margin: 0;
+    overflow: hidden;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    align-items: center;
+    justify-content: center;
+}
+
+.gallery img {
+    width: 250px;
+    height: 250px;
+    object-fit: cover;
+    display: block;
+    margin: auto;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #007ACC;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+img {
+	max-width: 100%;
+}
+
+
+/* Media query for 700px and wider */
+@media screen and (min-width: 700px) {
+    .gallery {
+        grid-template-columns: repeat(2, 1fr); /* Two-column layout */
+    }
+
+    header nav ul {
+        display: flex; /* Show navigation options */
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    header button {
+        display: none; /* Hide the "Menu" button */
+    }
+}
+
+/* Media query for 1000px and wider */
+@media screen and (min-width: 1000px) {
+    .gallery {
+        grid-template-columns: repeat(3, 1fr); /* Three-column layout */
+    }
+
+    header nav ul {
+        justify-content: center;
+    }
+}
