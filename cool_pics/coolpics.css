@@ -10,6 +10,18 @@ body {
     line-height: 1.6;
 }
 
+.menu {
+    display: none;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+  
+  /* When the menu is open, display it */
+.menu.open {
+    display: block;
+}
+
 h1, h2 {
     font-family: 'Mooli', sans-serif;
     margin: 0.5rem 0;
@@ -101,11 +113,62 @@ img {
 	max-width: 100%;
 }
 
+.thumbnail {
+    width: 200px;
+    margin: 1rem;
+    cursor: pointer;
+    border: 2px solid #ccc;
+    transition: border 0.3s;
+  }
+  .thumbnail:hover {
+    border-color: #333;
+  }
+
+/* Modal viewer styles */
+.viewer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: rgba(0, 0, 0, 0.75);
+    display: none; /* Hidden by default */
+    z-index: 10;
+    /* Set up grid to center content and place close button above image */
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-items: center;
+    justify-items: center;
+  }
+  /* Style for the close button */
+  .close-viewer {
+    font-size: 2rem;
+    color: white;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    align-self: start;
+    justify-self: end;
+    margin: 1rem;
+  }
+  /* Ensure the image does not exceed viewport height */
+  .viewer img {
+    max-height: 100%;
+    max-width: 100%;
+  }
 
 /* Media query for 700px and wider */
 @media screen and (min-width: 700px) {
     .gallery {
         grid-template-columns: repeat(2, 1fr); /* Two-column layout */
+    }
+
+    .menu {
+        display: flex;
+      }
+
+    #menu-toggle {
+        display: none;
     }
 
     header nav ul {
