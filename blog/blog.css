@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap');
 
 
@@ -74,4 +75,82 @@ select {
     width: 100%;
     padding: 5px;
     font-family: 'Roboto', sans-serif;
+=======
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap');
+
+
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+.skiptocontent a{
+    position: absolute;
+    top: -40px;
+    left: 10px;
+    background: #000;
+    color: #fff;
+    padding: 10px;
+    text-decoration: none;
+}
+.skiptocontent a:focus {
+    top: 0;
+}
+header {
+    background-color: #ffcc80;
+    padding: 20px;
+    text-align: center;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+nav {
+    display: grid; /* Enable grid layout */
+    justify-content: end; /* Align the grid content to the end (right) */
+    justify-items: end; /* Align the items inside the grid to the end (right) */
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+}
+nav ul li {
+    display: inline;
+    margin: 0 15px;
+    font-weight: 700;
+}
+main {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+.book-entry {
+    display: flex;
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+aside {
+    margin-right: 20px;
+    text-align: center;
+}
+.book-image {
+    width: 150px;
+    height: 200px;
+    background-color: #ffb74d;
+    margin-bottom: 10px;
+}
+.filters {
+    background: #ffecb3;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+}
+select {
+    margin: 5px 0;
+    width: 100%;
+    padding: 5px;
+    font-family: 'Roboto', sans-serif;
+>>>>>>> 85ee6b95aa5fe1c027772ef5dcec1d25d3bf4f30
 }
