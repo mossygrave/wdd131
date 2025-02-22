@@ -1,0 +1,107 @@
+/* Basic page styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 2rem;
+    background-color: #f0f0f0;
+  }
+  
+  nav a {
+    margin-bottom: 1rem;
+    display: inline-block;
+    text-decoration: none;
+    color: #333;
+  }
+  
+  h1 {
+    margin-bottom: 1rem;
+  }
+  
+  /* Form container */
+  form {
+    max-width: 600px;
+  }
+  
+  /* The container that will overlap the two "cards" */
+  .card-container {
+    /* Use a single grid cell to overlap front and back */
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr;
+    position: relative;
+    width: 400px;
+    height: 220px;
+    margin-bottom: 1.5rem;
+  }
+  
+  /* Shared card styling */
+  .card-front, .card-back {
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    padding: 1rem;
+    position: relative;
+  }
+  
+  /* BACK card styling */
+  .card-back {
+    background-color: #ccc;
+    /* Place it behind the front */
+    z-index: 1;
+    /* Shift it slightly so it peeks out from behind */
+    transform: translate(40px, 30px);
+  }
+  
+  /* The black strip on the back */
+  .magnetic-strip {
+    width: 100%;
+    height: 40px;
+    background-color: #333;
+    margin-bottom: 1rem;
+    border-radius: 2px;
+  }
+  
+  /* FRONT card styling */
+  .card-front {
+    background-color: #eee;
+    z-index: 2;
+  }
+  
+  /* "TOTAL: $199" text */
+  .total {
+    font-weight: bold;
+    margin-bottom: 1rem;
+  }
+  
+  /* Simple group for labels and inputs */
+  .form-group {
+    margin-bottom: 0.75rem;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+  
+  /* Card logo image on the right */
+  .card-image {
+    height: 25px;
+    margin-left: auto;
+    display: block;
+  }
+  
+  /* Expiration row layout */
+  .expiration-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  
+  /* Submit button styling */
+  button[type="submit"] {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+  }
+
+  
