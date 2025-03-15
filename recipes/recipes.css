@@ -1,0 +1,153 @@
+/* Import an accessible alternative to Amatic SC */
+@import url("https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap");
+
+/* Define color variables */
+:root {
+    --primary-color: #1B98E0;
+    --secondary-color: #59c3c3;
+    --text-dark: #333;
+    --text-light: #ebebeb;
+    --primary-font: Arial, Helvetica, sans-serif;
+    --secondary-font: "Fredoka", sans-serif;
+}
+
+/* Global styles */
+body {
+    font-family: var(--primary-font);
+    color: var(--text-dark);
+    background-color: white;
+    margin: 0;
+    padding: 0;
+}
+
+/* Container for all recipes */
+main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Recipe sections */
+.recipe {
+    background: var(--text-light);
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Recipe title */
+.recipe h2, h1{
+    font-family: var(--secondary-font);
+    font-size: 1.8rem;
+    color: var(--primary-color);
+    text-align: center;
+    margin: 10px 0;
+}
+
+/* Hide description on small screens */
+.recipe .description {
+    display: none;
+}
+
+.search-form {
+    position: sticky;
+    top: 0;
+    background-color: white;
+    z-index: 10;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+main {
+    margin-top: 60px;
+    padding: 20px;
+}
+
+/* Make images responsive */
+main img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+img {
+    max-width: 10%;
+    max-height: 10%;
+}
+
+button {
+    max-width: 10%;
+    max-height: 100%;
+}
+
+/* Recipe metadata */
+.recipe .author, .recipe .cook-time, .recipe .prep-time, .recipe .yield {
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    text-align: center;
+    margin: 5px 0;
+}
+
+/* Recipe tags */
+.tags {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.tag {
+    background-color: var(--secondary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+}
+
+/* Ingredient list */
+.ingredients, .instructions {
+    text-align: left;
+    width: 100%;
+    max-width: 350px;
+}
+
+.ingredients li, .instructions li {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+    /* Show description on larger screens */
+    .recipe .description {
+        display: block;
+        text-align: center;
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+
+    /* Center align text for better readability */
+    .recipe h2, .recipe .description {
+        text-align: center;
+    }
+
+    /* Adjust layout for bigger screens */
+    main {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .recipe {
+        max-width: 500px;
+    }
+}
