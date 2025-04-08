@@ -1,160 +1,216 @@
+/* Mina's Business Styles */
 
-/*Style sheet for mina's business*/
-
+/* Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Rock+Salt&family=Teachers:ital,wght@0,400;0,700;1,400&display=swap');
 
-
-:root{
-    --heading-font: "Rock Salt", Helvetica, sans-serif;
-    --paragraph-font: Teachers, helvetica, sans-serif;
+/* Root variables */
+:root {
+  --heading-font: "Rock Salt", Helvetica, sans-serif;
+  --paragraph-font: Teachers, Helvetica, sans-serif;
 }
 
-#content{
-    max-width: 1800px;
-    margin: 0 -10px;
-    background-color: #4A4641;
+/* Layout Containers */
+body, html {
+  height: 100%;
+  margin: 0;
 }
-header{
-    background-color: #4A4641;
-    padding-top: 10px;
+
+#content {
+  max-width: 1800px;
+  margin: 0 -10px;
+  background-color: #4A4641;
 }
-.logo_link{
-    padding-top: 5px;
-    justify-self: center;
-    align-self: center;
+
+main {
+  background-color: #88A27D;
 }
+
+/* Header */
+header {
+  background-color: #4A4641;
+  padding-top: 10px;
+}
+
+.logo_link {
+  padding-top: 5px;
+  justify-self: center;
+  align-self: center;
+}
+
+.logo {
+  max-width: 150px;
+  height: auto;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Navigation */
 nav {
+  display: flex;
+}
+
+nav a {
+  text-decoration: none;
+  padding: 15px 75px;
+  text-align: center;
+  font-family: var(--paragraph-font);
+  color: #FFE3E3;
+  font-size: 1.5em;
+}
+
+nav a:hover {
+  color: white;
+  background-color: #88A27D;
+}
+
+.active {
+  background-color: #88A27D;
+  color: white;
+}
+
+/* Service Cards Section */
+#service_cards {
+    background-image: url("../images/bamboo_background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    padding: 2rem;
+    position: relative;
+    min-height: 100vh;
+    z-index: 0; 
+}
+
+.services-container {
     display: flex;
-    
+    flex-wrap: wrap;
+    gap: 1rem;
+    justify-content: space-between; 
+    position: relative;
+    z-index: 1;
 }
-nav a{
-    text-decoration: none;
-    padding: 15px 75px;
-    text-align: center;
-    font-family: var(--paragraph-font);
-    color: #FFE3E3;
-    font-size: 1.5em;
-}
-nav a:hover{
-    color: white;
-    background-color: #88A27D;
-}
-img{
-    max-width: 50%;
-    height: auto;
-}
-main{
-    background-color: #88A27D;
-}
-#service_cards{
-    display: grid; 
-    grid-template-columns: 40px repeat(8, 1fr) 40px;
-    grid-template-rows: repeat(2, 1fr) 25px;
-}
-.container {
+
+.service {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+    background-color: rgba(255, 255, 255, 0.9);
+    padding: 1rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
     width: 100%;
-    background-color: rgba(245, 245, 245, 0.856);
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding-bottom: 0px;
-    border: 10px solid white;
-    border-radius: 10px;
-    box-sizing: border-box;
-} 
-div.overlay {
-    text-align: center;
-    padding: 10px 20px;
+    min-width: 500px; 
+    max-width: 100%; 
 }
-#full_lashes{
-    grid-column: 2/5;
-    grid-row: 1;
-    margin:auto;
-    z-index: 2;    
-}
-#makeup {
-    grid-column: 5/7;
-    grid-row: 2;
-    margin:auto; 
-    z-index: 2;
-}
-#b_a{
-    grid-column: 7/10;
-    grid-row: 1;
-    margin:auto;  
-    z-index: 2;
-}
-h1 {
+  
+.service h2 {
     font-family: var(--heading-font);
-    text-align: center;
-    color: whitesmoke;
-    text-shadow: 4px 4px 4px black ;
-    padding-bottom: 30px;
-    padding-top: 20px;
-    margin: 0;
-    background-color: #88A27D;
+    font-size: 1.5rem;
+    margin: 0.5rem 0;
 }
-.text{
+  
+.service__description {
     font-family: var(--paragraph-font);
+    font-size: 1rem;
+    line-height: 1.4;
 }
-.logo{
-    max-width: 150px;
+
+.service figcaption {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+.service img {
+    flex-shrink: 0;
+    width: 200px;
     height: auto;
+    border-radius: 4px;
+}
+
+#bamboo {
+  z-index: -1;
+  grid-column: 1 / 11;
+  grid-row: 1 / 4;
+}
+
+/* Text */
+h1 {
+  font-family: var(--heading-font);
+  text-align: center;
+  color: whitesmoke;
+  text-shadow: 4px 4px 4px black;
+  padding: 20px 0 30px;
+  margin: 0;
+  background-color: #88A27D;
+}
+
+.text {
+  font-family: var(--paragraph-font);
+}
+
+.container {
+  width: 100%;
+  background-color: rgba(245, 245, 245, 0.856);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2),
+              0 6px 20px rgba(0, 0, 0, 0.19);
+  border: 10px solid white;
+  border-radius: 10px;
+  box-sizing: border-box;
+  padding-bottom: 0;
+}
+
+div.overlay {
+  text-align: center;
+  padding: 10px 20px;
+}
+
+/* Footer */
+footer {
+  background-color: #4A4641;
+}
+
+footer nav {
+  margin: 0;
+}
+
+footer .logo {
+  margin-left: 20px;
+  margin-bottom: 15px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 900px) {
+  nav, footer {
+    flex-direction: column;
+  }
+
+  nav a {
     display: block;
+    padding: 15px;
+  }
+
+  .logo {
+    padding-top: 5px;
     margin-left: auto;
-    margin-right: auto;  
-}
-img{
-    max-width: 100%;
-    height: auto;
-}
-body, html{
-    height: 100%;
-    margin: 0;
-}
-#bamboo{
-    z-index: 0;
-    grid-column: 1/11;
-    grid-row: 1/4;
-}
-footer .logo{
-    margin-left: 20px;
-    margin-bottom: 15px;
-}
-footer{
-    background-color: #4A4641;
-}
-footer nav{
-    margin: 0;
-}
-.active{
-    background-color: #88A27D;
-    color: white;
-}
+    margin-right: auto;
+  }
 
+  .service {
+    max-width: 500px;
+    flex-direction: column;
+    align-items: center;
+  }
 
-@media screen and (max-width: 900px){
-    nav, footer {
-        flex-direction: column;
-    }
-
-    nav a {
-        display: block;
-        padding: 15px;
-    }
-
-    .logo{
-        padding-top: 5px;
-        margin-left: auto;
-        margin-right: auto;
-    }
-
-    .service .description {
-        display: block;
-        text-align: center;
-        font-size: 1rem;
-        margin: 10px 0;
-    }
-
-    .service {
-        max-width: 500px;
-    }
+  .service img {
+    width: 100%;
+    max-width: 400px;
+  }
 }
