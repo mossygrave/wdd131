@@ -135,13 +135,26 @@ footer nav{
     nav, footer {
         flex-direction: column;
     }
+
     nav a {
         display: block;
         padding: 15px;
     }
+
     .logo{
         padding-top: 5px;
         margin-left: auto;
         margin-right: auto;
+    }
+
+    .service .description {
+        display: block;
+        text-align: center;
+        font-size: 1rem;
+        margin: 10px 0;
+    }
+
+    .service {
+        max-width: 500px;
     }
 }

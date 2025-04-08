@@ -14,7 +14,6 @@ function serviceTemplate(service) {
                 ${tagsTemplate(service.tags)}
             </ul>
             <h2><a href="#">${service.name}</a></h2>
-            ${ratingTemplate(service.rating)}
             <p class="service__description">${service.description}</p>
         </figcaption>
     </figure>`;
@@ -25,7 +24,7 @@ function tagsTemplate(tags) {
 }
 
 function renderServices(serviceList) {
-    const mainContainer = document.querySelector("main");
+    const mainContainer = document.querySelector("service_cards");
 
     const servicesHTML = serviceList.map(service => serviceTemplate(service)).join('');
     mainContainer.innerHTML = `<div class="services-container">${servicesHTML}</div>`;
@@ -54,6 +53,6 @@ const searchForm = document.querySelector(".search-form");
 searchForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const query = document.querySelector("#search").value;
-    const filteredservices = filterservices(query);
-    renderservices(filteredservices);
+    const filteredservices = filterServices(query);
+    renderServices(filteredservices);
 });

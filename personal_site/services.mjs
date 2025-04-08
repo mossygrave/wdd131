@@ -1,21 +1,21 @@
 export const services = [
     {
         name: 'Lash Lift',
-        image: '',
-        description: '',
-        price: ''
+        image: './images/lashes.jpg',
+        description: '[Insert Description Here]',
+        price: '[Insert Price Here]'
     },
     {
         name: 'Brow Tint',
-        image: '',
-        description: '',
-        price: ''
+        image: './images/brows.jpg',
+        description: '[Insert Description Here]',
+        price: '[Insert Price Here]'
     },
     {
         name: 'Makeup',
-        image: '',
-        description: '',
-        price: ''
+        image: './images/makeup.jpg',
+        description: '[Insert Description Here]',
+        price: '[Insert Price Here]'
     }
 ]
 export default services
