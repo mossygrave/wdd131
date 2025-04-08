@@ -92,24 +92,31 @@ nav a:hover {
 
 .service {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
     background-color: rgba(255, 255, 255, 0.9);
     padding: 1rem;
     border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-    width: 100%;
-    min-width: 500px; 
-    max-width: 100%; 
+    width: 40%; 
+    min-width: 500px;
+    max-width: 100%;
 }
-  
+
+.service img {
+    flex-shrink: 0;
+    width: 200px;
+    height: auto;
+    border-radius: 4px;
+}
+
 .service h2 {
     font-family: var(--heading-font);
     font-size: 1.5rem;
     margin: 0.5rem 0;
 }
-  
+
 .service__description {
     font-family: var(--paragraph-font);
     font-size: 1rem;
@@ -124,33 +131,21 @@ nav a:hover {
 
 /* Images */
 img {
-  max-width: 100%;
-  height: auto;
-}
-
-.service img {
-    flex-shrink: 0;
-    width: 200px;
+    max-width: 100%;
     height: auto;
-    border-radius: 4px;
-}
-
-#bamboo {
-  z-index: -1;
-  grid-column: 1 / 11;
-  grid-row: 1 / 4;
 }
 
 /* Text */
 h1 {
-  font-family: var(--heading-font);
-  text-align: center;
-  color: whitesmoke;
-  text-shadow: 4px 4px 4px black;
-  padding: 20px 0 30px;
-  margin: 0;
-  background-color: #88A27D;
+    font-family: var(--heading-font);
+    text-align: center;
+    color: whitesmoke;
+    text-shadow: 4px 4px 4px black;
+    padding: 20px 0 30px;
+    margin: 0;
+    background-color: #88A27D;
 }
+
 
 .text {
   font-family: var(--paragraph-font);
