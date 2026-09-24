@@ -1,6 +1,4 @@
-li {
-  margin-bottom: 20px;
-}
+
 
 /* Set the default font size and font family */
 body {
@@ -10,14 +8,23 @@ body {
     padding: 0;
     box-sizing: border-box;
   }
+
+  #theme-selector {
+    display: block;
+    margin: 20px auto; 
+  }
   
+  li {
+  margin-bottom: 20px;
+  }
+
   hr {
     width: 80%;
     margin: 20px auto; 
   }
 
   /* Center titles and main content */
-  h1, h2, .stuff {
+  h1, h2, footer{
     text-align: center;
   }
   
