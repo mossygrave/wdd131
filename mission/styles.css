@@ -50,7 +50,10 @@ body {
   .stuff {
     max-width: 600px;
     margin: 0 auto; 
-    padding: 40px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 80px;
+    padding-right: 80px;
     border: 1px solid #ccc;
   }
   
