@@ -37,6 +37,7 @@ body {
   /* Style for the subtitle */
   h2 {
     color: #006EB6; 
+    font-size: .8em;
   }
   
   /* Styling for the titles (h1 and h2) */
@@ -49,7 +50,8 @@ body {
   .stuff {
     max-width: 600px;
     margin: 0 auto; 
-    padding: 20px;
+    padding: 400px;
+    border: 1px solid #ccc;
   }
   
   /* Resize logo image */
