@@ -58,7 +58,7 @@ footer {
     main {
         grid-template-columns: 1fr 1fr;
     }
-    menu-btn {
+    .menu-btn {
         display: none;
     }
     nav a {

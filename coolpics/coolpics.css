@@ -132,29 +132,32 @@ img {
     bottom: 0;
     right: 0;
     background: rgba(0, 0, 0, 0.75);
-    display: none; /* Hidden by default */
+    display: none;
     z-index: 10;
     /* Set up grid to center content and place close button above image */
-    display: grid;
     grid-template-rows: auto 1fr;
     align-items: center;
     justify-items: center;
   }
+  .viewer:not([hidden]) {
+    display: grid;
+  }
   /* Style for the close button */
   .close-viewer {
-    font-size: 2rem;
+    font-size: 2.5rem;
     color: white;
     background: transparent;
     border: none;
     cursor: pointer;
     align-self: start;
     justify-self: end;
-    margin: 1rem;
+    margin: 0.5rem 1rem;
+    line-height: 1;
   }
   /* Ensure the image does not exceed viewport height */
   .viewer img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: calc(100vh - 5rem);
+    max-width: calc(100vw - 2rem);
   }
 
 /* Media query for 700px and wider */

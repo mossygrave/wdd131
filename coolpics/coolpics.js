@@ -11,43 +11,53 @@ menuButton.addEventListener('click', () => {
   const isExpanded = menuButton.getAttribute('aria-expanded') === 'true';
   menuButton.setAttribute('aria-expanded', !isExpanded);
 });
-    // Select the modal viewer elements
-    const viewer = document.querySelector('.viewer');
-    const viewerImg = viewer.querySelector('img');
-    const closeViewer = viewer.querySelector('.close-viewer');
+// Select the modal viewer elements
+const viewer = document.querySelector('.viewer');
+const viewerImg = viewer.querySelector('img');
+const closeViewer = viewer.querySelector('.close-viewer');
+let activeThumbnail;
 
-    // Function to open the modal with the specified image source
-    function openModal(imageSrc, altText) {
-      viewerImg.src = imageSrc;
-      viewerImg.alt = altText;
-      viewer.style.display = 'grid';
+function openModal(imageSrc, altText, thumbnail) {
+  viewerImg.src = imageSrc;
+  viewerImg.alt = altText;
+  activeThumbnail = thumbnail;
+  viewer.hidden = false;
+  closeViewer.focus();
+}
+
+function closeModal() {
+  viewer.hidden = true;
+  viewerImg.src = '';
+  activeThumbnail?.focus();
+}
+
+const thumbnails = document.querySelectorAll('.thumbnail');
+thumbnails.forEach(thumbnail => {
+  const showFullImage = () => {
+    const largeImageUrl = thumbnail.getAttribute('data-large') || thumbnail.src;
+    const altText = thumbnail.alt || 'Enlarged image';
+    openModal(largeImageUrl, altText, thumbnail);
+  };
+
+  thumbnail.addEventListener('click', showFullImage);
+  thumbnail.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      event.preventDefault();
+      showFullImage();
     }
+  });
+});
 
-    // Function to close the modal
-    function closeModal() {
-      viewer.style.display = 'none';
-      // Optionally, remove the src to stop any ongoing image loading
-      viewerImg.src = '';
-    }
+closeViewer.addEventListener('click', closeModal);
 
-    // Add event listeners to thumbnail images
-    const thumbnails = document.querySelectorAll('.thumbnail');
-    thumbnails.forEach(thumbnail => {
-      thumbnail.addEventListener('click', () => {
-        // Use the data-large attribute if available, or fallback to the thumbnail's src
-        const largeImageUrl = thumbnail.getAttribute('data-large') || thumbnail.src;
-        const altText = thumbnail.alt || 'Enlarged image';
-        openModal(largeImageUrl, altText);
-      });
-    });
+viewer.addEventListener('click', event => {
+  if (event.target === viewer) {
+    closeModal();
+  }
+});
 
-    // Add event listener for the close button
-    closeViewer.addEventListener('click', closeModal);
-
-    // Optionally close the modal if clicking outside the image (but inside the viewer)
-    viewer.addEventListener('click', (event) => {
-      // Only close if the viewer itself was clicked, not one of its children
-      if (event.target === viewer) {
-        closeModal();
-      }
-    });
+document.addEventListener('keydown', event => {
+  if (!viewer.hidden && event.key === 'Escape') {
+    closeModal();
+  }
+});
