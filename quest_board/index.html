@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#17241f">
+    <meta name="description" content="A personal quest board for planning your day and earning rewards.">
+    <title>Quest Board — Your daily adventure</title>
+    <link rel="stylesheet" href="stylesheet.css">
+    <script src="script.js" defer></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#" aria-label="Quest Board home">
+            <span class="brand-mark" aria-hidden="true">✦</span>
+            <span>QUEST<span class="brand-light">BOARD</span></span>
+        </a>
+        <div class="topbar-right">
+            <span class="today-label" id="today-label"></span>
+            <div class="coin-purse" aria-label="Coin balance">
+                <span class="coin-icon" aria-hidden="true">◉</span>
+                <span id="coin-balance">0</span>
+                <span class="coin-word">coins</span>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="welcome">
+            <div>
+                <p class="eyebrow"><span class="eyebrow-line"></span> YOUR ADVENTURE STARTS HERE</p>
+                <h1>Make today <em>count.</em></h1>
+                <p class="welcome-copy">Choose your quests, make a plan, and earn your way forward.</p>
+            </div>
+            <div class="welcome-sigil" aria-hidden="true">✧</div>
+        </section>
+
+        <nav class="tabs" role="tablist" aria-label="Quest board sections">
+            <button class="tab-button is-active" id="board-tab" type="button" role="tab" aria-selected="true" aria-controls="board-view">Quest board</button>
+            <button class="tab-button" id="calendar-tab" type="button" role="tab" aria-selected="false" aria-controls="calendar-view" tabindex="-1">Calendar</button>
+            <button class="tab-button" id="completed-tab" type="button" role="tab" aria-selected="false" aria-controls="completed-view" tabindex="-1">Completed quests</button>
+            <button class="tab-button" id="shop-tab" type="button" role="tab" aria-selected="false" aria-controls="shop-view" tabindex="-1">Reward shop</button>
+        </nav>
+
+        <div id="board-view" role="tabpanel" aria-labelledby="board-tab">
+        <section class="daily-section" aria-labelledby="daily-heading">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">THE PLAN</p>
+                    <h2 id="daily-heading">Today's main quests</h2>
+                </div>
+                <button class="button button-outline" id="open-schedule" type="button">
+                    <span aria-hidden="true">＋</span> Plan a quest
+                </button>
+            </div>
+            <div class="timeline" id="main-quest-list" aria-live="polite"></div>
+        </section>
+
+        <section class="daily-section" aria-labelledby="daily-quests-heading">
+            <div class="section-heading">
+                <div>
+                    <p class="eyebrow">A LITTLE EVERY DAY</p>
+                    <h2 id="daily-quests-heading">Daily quests</h2>
+                </div>
+                <span class="quest-count" id="daily-quest-count">0</span>
+            </div>
+            <div class="quest-list" id="daily-quest-list" aria-live="polite"></div>
+        </section>
+
+        <div class="board-grid">
+            <section class="panel create-panel" aria-labelledby="create-heading">
+                <div class="panel-heading">
+                    <span class="panel-icon" aria-hidden="true">✎</span>
+                    <div>
+                        <p class="eyebrow">ADD TO YOUR JOURNAL</p>
+                        <h2 id="create-heading">Create a quest</h2>
+                    </div>
+                </div>
+                <form id="quest-form">
+                    <label class="field-label" for="quest-title">Quest name</label>
+                    <input id="quest-title" name="title" type="text" maxlength="80" placeholder="e.g. Tidy the study" required>
+
+                    <label class="field-label" for="quest-description">A few details <span class="optional">(optional)</span></label>
+                    <textarea id="quest-description" name="description" rows="2" maxlength="240" placeholder="What does completing this quest look like?"></textarea>
+
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label class="field-label" for="quest-type">Quest type</label>
+                            <select id="quest-type" name="type">
+                                <option value="main">Main quest</option>
+                                <option value="side">Side quest</option>
+                                <option value="daily">Daily quest</option>
+                            </select>
+                        </div>
+                        <div class="form-field">
+                            <label class="field-label" for="quest-duration">Time needed</label>
+                            <div class="input-suffix">
+                                <input id="quest-duration" name="duration" type="number" min="1" max="1440" step="1" value="60" required>
+                                <span>min</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-field reward-field" id="reward-field" hidden>
+                        <label class="field-label" for="quest-reward">Coin reward</label>
+                        <div class="input-suffix">
+                            <input id="quest-reward" name="reward" type="number" min="1" max="99999" step="1" value="10">
+                            <span>coins</span>
+                        </div>
+                    </div>
+
+                    <button class="button button-primary create-button" type="submit">Add to quest log <span aria-hidden="true">↗</span></button>
+                </form>
+            </section>
+
+            <section class="panel journal-panel" aria-labelledby="journal-heading">
+                <div class="panel-heading journal-heading">
+                    <span class="panel-icon" aria-hidden="true">▤</span>
+                    <div>
+                        <p class="eyebrow">READY WHEN YOU ARE</p>
+                        <h2 id="journal-heading">Quest log</h2>
+                    </div>
+                    <span class="quest-count" id="quest-count">0</span>
+                </div>
+                <div class="quest-list" id="quest-list" aria-live="polite"></div>
+            </section>
+        </div>
+        </div>
+
+        <section id="calendar-view" role="tabpanel" aria-labelledby="calendar-tab" hidden>
+            <div class="calendar-header">
+                <div class="shop-intro">
+                    <p class="eyebrow">YOUR TIME, AT A GLANCE</p>
+                    <h2>Calendar</h2>
+                    <p>Recurring events and planned main quests, all in one place.</p>
+                </div>
+                <div class="calendar-controls">
+                    <div class="calendar-view-toggle" role="group" aria-label="Calendar view">
+                        <button class="calendar-toggle is-active" id="week-view-button" type="button" aria-pressed="true">Week</button>
+                        <button class="calendar-toggle" id="month-view-button" type="button" aria-pressed="false">Month</button>
+                    </div>
+                    <div class="calendar-navigation">
+                        <button class="calendar-nav-button" id="calendar-previous" type="button" aria-label="Previous week">‹</button>
+                        <button class="button button-outline calendar-today-button" id="calendar-today" type="button">Today</button>
+                        <button class="calendar-nav-button" id="calendar-next" type="button" aria-label="Next week">›</button>
+                    </div>
+                </div>
+            </div>
+            <h3 class="calendar-period" id="calendar-period" aria-live="polite"></h3>
+            <div class="calendar-scroll">
+                <div class="calendar-grid" id="calendar-grid" aria-label="Calendar"></div>
+            </div>
+            <section class="panel selected-day-panel" aria-labelledby="selected-day-heading">
+                <div class="section-heading selected-day-heading">
+                    <div>
+                        <p class="eyebrow">YOUR SCHEDULE</p>
+                        <h2 id="selected-day-heading"></h2>
+                    </div>
+                    <button class="button button-outline" id="calendar-plan-quest" type="button">＋ Plan a main quest</button>
+                </div>
+                <div class="selected-day-events" id="selected-day-events" aria-live="polite"></div>
+            </section>
+            <div class="calendar-management">
+                <section class="panel" aria-labelledby="create-event-heading">
+                    <div class="panel-heading">
+                        <span class="panel-icon" aria-hidden="true">↻</span>
+                        <div>
+                            <p class="eyebrow">MAKE SPACE FOR THE REGULARS</p>
+                            <h2 id="create-event-heading">Add a recurring event</h2>
+                        </div>
+                    </div>
+                    <form id="calendar-event-form">
+                        <label class="field-label" for="calendar-event-title">Event name</label>
+                        <input id="calendar-event-title" name="title" type="text" maxlength="80" placeholder="e.g. Biology class" required>
+                        <label class="field-label" for="calendar-event-description">A few details <span class="optional">(optional)</span></label>
+                        <input id="calendar-event-description" name="description" type="text" maxlength="160" placeholder="e.g. Room 204">
+                        <fieldset class="weekday-field">
+                            <legend class="field-label">Repeats every week</legend>
+                            <div class="weekday-options">
+                                <label><input type="checkbox" name="weekdays" value="0"> Sun</label>
+                                <label><input type="checkbox" name="weekdays" value="1"> Mon</label>
+                                <label><input type="checkbox" name="weekdays" value="2"> Tue</label>
+                                <label><input type="checkbox" name="weekdays" value="3"> Wed</label>
+                                <label><input type="checkbox" name="weekdays" value="4"> Thu</label>
+                                <label><input type="checkbox" name="weekdays" value="5"> Fri</label>
+                                <label><input type="checkbox" name="weekdays" value="6"> Sat</label>
+                            </div>
+                        </fieldset>
+                        <div class="form-row">
+                            <div class="form-field">
+                                <label class="field-label" for="calendar-event-start">Starts</label>
+                                <input id="calendar-event-start" name="startTime" type="time" required>
+                            </div>
+                            <div class="form-field">
+                                <label class="field-label" for="calendar-event-end">Ends</label>
+                                <input id="calendar-event-end" name="endTime" type="time" required>
+                            </div>
+                        </div>
+                        <button class="button button-primary create-button" type="submit">Add to calendar <span aria-hidden="true">↗</span></button>
+                    </form>
+                </section>
+                <section class="panel" aria-labelledby="recurring-events-heading">
+                    <div class="panel-heading journal-heading">
+                        <span class="panel-icon" aria-hidden="true">▤</span>
+                        <div>
+                            <p class="eyebrow">HAPPENS EVERY WEEK</p>
+                            <h2 id="recurring-events-heading">Recurring events</h2>
+                        </div>
+                        <span class="quest-count" id="recurring-event-count">0</span>
+                    </div>
+                    <div class="recurring-event-list" id="recurring-event-list" aria-live="polite"></div>
+                </section>
+            </div>
+        </section>
+
+        <section id="completed-view" role="tabpanel" aria-labelledby="completed-tab" hidden>
+            <div class="shop-intro">
+                <p class="eyebrow">LOOK HOW FAR YOU'VE COME</p>
+                <h2>Completed quests</h2>
+                <p>Your finished main and side quests live here. Daily quests stay on the quest board.</p>
+            </div>
+            <section class="panel completed-panel" aria-labelledby="completed-heading">
+                <div class="panel-heading journal-heading">
+                    <span class="panel-icon" aria-hidden="true">✓</span>
+                    <div>
+                        <p class="eyebrow">A RECORD OF YOUR WINS</p>
+                        <h2 id="completed-heading">Quest history</h2>
+                    </div>
+                    <span class="quest-count" id="completed-count">0</span>
+                </div>
+                <div class="quest-list" id="completed-list" aria-live="polite"></div>
+            </section>
+        </section>
+
+        <section id="shop-view" role="tabpanel" aria-labelledby="shop-tab" hidden>
+            <div class="shop-intro">
+                <p class="eyebrow">SPEND YOUR HARD-EARNED COINS</p>
+                <h2>Reward shop</h2>
+                <p>Set a reward for yourself, then redeem it with coins earned from side quests.</p>
+            </div>
+            <div class="shop-grid">
+                <section class="panel" aria-labelledby="create-reward-heading">
+                    <div class="panel-heading">
+                        <span class="panel-icon" aria-hidden="true">✦</span>
+                        <div>
+                            <p class="eyebrow">SOMETHING TO LOOK FORWARD TO</p>
+                            <h2 id="create-reward-heading">Create a reward</h2>
+                        </div>
+                    </div>
+                    <form id="reward-form">
+                        <label class="field-label" for="reward-title">Reward name</label>
+                        <input id="reward-title" name="title" type="text" maxlength="80" placeholder="e.g. A fancy coffee" required>
+
+                        <label class="field-label" for="reward-description">A few details <span class="optional">(optional)</span></label>
+                        <textarea id="reward-description" name="description" rows="2" maxlength="240" placeholder="Describe the treat you have in mind."></textarea>
+
+                        <label class="field-label" for="reward-cost">Coin cost</label>
+                        <div class="input-suffix">
+                            <input id="reward-cost" name="cost" type="number" min="1" max="999999" step="1" value="50" required>
+                            <span>coins</span>
+                        </div>
+
+                        <button class="button button-primary create-button" type="submit">Add to the shop <span aria-hidden="true">↗</span></button>
+                    </form>
+                </section>
+
+                <section class="panel shop-panel" aria-labelledby="available-rewards-heading">
+                    <div class="panel-heading journal-heading">
+                        <span class="panel-icon" aria-hidden="true">◇</span>
+                        <div>
+                            <p class="eyebrow">YOU'VE EARNED THESE</p>
+                            <h2 id="available-rewards-heading">Available rewards</h2>
+                        </div>
+                        <span class="quest-count" id="reward-count">0</span>
+                    </div>
+                    <div class="reward-list" id="reward-list" aria-live="polite"></div>
+                </section>
+            </div>
+        </section>
+    </main>
+
+    <dialog id="schedule-dialog" aria-labelledby="schedule-heading">
+        <form id="schedule-form" method="dialog">
+            <div class="dialog-heading">
+                <div>
+                    <p class="eyebrow">MAKE IT HAPPEN</p>
+                    <h2 id="schedule-heading">Schedule a main quest</h2>
+                </div>
+                <button class="close-button" type="button" id="close-schedule" aria-label="Close">×</button>
+            </div>
+            <label class="field-label" for="schedule-quest">Choose a quest</label>
+            <select id="schedule-quest" name="questId" required></select>
+            <label class="field-label" for="schedule-time">Start time</label>
+            <input id="schedule-time" name="startTime" type="time" required>
+            <label class="field-label" for="schedule-date">Date</label>
+            <input id="schedule-date" name="date" type="date" required>
+            <p class="schedule-hint" id="schedule-hint">The end time will be calculated from the quest duration.</p>
+            <div class="dialog-actions">
+                <button class="button button-outline" type="button" id="cancel-schedule">Cancel</button>
+                <button class="button button-primary" type="submit">Add to today's plan</button>
+            </div>
+        </form>
+    </dialog>
+    <div class="confetti-layer" id="confetti-layer" aria-hidden="true"></div>
+    <p class="visually-hidden" id="status-message" role="status" aria-live="polite"></p>
+</body>
+</html>
