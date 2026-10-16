@@ -478,13 +478,17 @@ function renderDailyQuests() {
                     <span class="type-badge">Daily</span>
                 </div>
                 ${quest.description ? `<p class="quest-description">${escapeHtml(quest.description)}</p>` : ""}
-                <div class="quest-meta"><span>${formatDuration(quest.duration)}</span></div>
+                <div class="quest-meta"><span>${formatDuration(quest.duration)}</span>${quest.reward ? `<span>◉ ${quest.reward} coins</span>` : ""}</div>
             </div>
-            <button class="quest-action${completedToday ? " daily-complete" : ""}" type="button" data-action="complete-daily"${completedToday ? " disabled" : ""}>
-                ${completedToday ? "✓ Done today" : "Complete today"}
-            </button>
+            <div class="quest-actions">
+                <button class="quest-action${completedToday ? " daily-complete" : ""}" type="button" data-action="complete-daily"${completedToday ? " disabled" : ""}>
+                    ${completedToday ? "✓ Done today" : `Complete today${quest.reward ? ` · +${quest.reward} ◉` : ""}`}
+                </button>
+                <button class="quest-action" type="button" data-action="delete-daily" aria-label="Delete daily quest: ${escapeHtml(quest.title)}">Delete</button>
+            </div>
         `;
         card.querySelector("[data-action='complete-daily']")?.addEventListener("click", () => completeDailyQuest(quest.id));
+        card.querySelector("[data-action='delete-daily']")?.addEventListener("click", () => deleteDailyQuest(quest.id));
         dailyQuestList.append(card);
     }
 }
@@ -612,11 +616,30 @@ function completeDailyQuest(questId) {
     const quest = state.quests.find((item) => item.id === questId);
     const today = localDateKey();
     if (!quest || quest.type !== "daily" || quest.completedOn === today) return;
+    const reward = Number.isInteger(quest.reward) && quest.reward > 0 ? quest.reward : 0;
     quest.completedOn = today;
+    state.coins += reward;
     if (saveState()) {
         render();
         celebrate();
-        announce(`${quest.title} marked complete for today.`);
+        announce(reward > 0
+            ? `${quest.title} marked complete for today. You earned ${reward} coins.`
+            : `${quest.title} marked complete for today.`);
+    } else {
+        delete quest.completedOn;
+        state.coins -= reward;
+    }
+}
+
+function deleteDailyQuest(questId) {
+    const questIndex = state.quests.findIndex((item) => item.id === questId && item.type === "daily");
+    if (questIndex === -1) return;
+    const [quest] = state.quests.splice(questIndex, 1);
+    if (saveState()) {
+        render();
+        announce(`${quest.title} deleted.`);
+    } else {
+        state.quests.splice(questIndex, 0, quest);
     }
 }
 
@@ -659,9 +682,9 @@ function removeRecurringEvent(eventId) {
 }
 
 questType.addEventListener("change", () => {
-    const isSideQuest = questType.value === "side";
-    rewardField.hidden = !isSideQuest;
-    rewardInput.required = isSideQuest;
+    const hasCoinReward = ["side", "daily"].includes(questType.value);
+    rewardField.hidden = !hasCoinReward;
+    rewardInput.required = hasCoinReward;
 });
 
 questForm.addEventListener("submit", (event) => {
@@ -676,10 +699,10 @@ questForm.addEventListener("submit", (event) => {
         createdAt: Date.now(),
         completed: false
     };
-    if (quest.type === "side") quest.reward = Number(formData.get("reward"));
+    if (["side", "daily"].includes(quest.type)) quest.reward = Number(formData.get("reward"));
 
-    if (!quest.title || !Number.isInteger(quest.duration) || quest.duration < 1 || (quest.type === "side" && (!Number.isInteger(quest.reward) || quest.reward < 1))) {
-        announce("Please enter a quest name, a valid duration, and a valid coin reward for side quests.");
+    if (!quest.title || !Number.isInteger(quest.duration) || quest.duration < 1 || (["side", "daily"].includes(quest.type) && (!Number.isInteger(quest.reward) || quest.reward < 1))) {
+        announce("Please enter a quest name, a valid duration, and a valid coin reward for side and daily quests.");
         return;
     }
 
