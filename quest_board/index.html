@@ -236,7 +236,7 @@
             <div class="shop-intro">
                 <p class="eyebrow">SPEND YOUR HARD-EARNED COINS</p>
                 <h2>Reward shop</h2>
-                <p>Set a reward for yourself, then redeem it with coins earned from side quests.</p>
+                <p>Set a reward for yourself, then redeem it with coins earned from quests.</p>
             </div>
             <div class="shop-grid">
                 <section class="panel" aria-labelledby="create-reward-heading">
@@ -259,6 +259,12 @@
                             <input id="reward-cost" name="cost" type="number" min="1" max="999999" step="1" value="50" required>
                             <span>coins</span>
                         </div>
+
+                        <label class="field-label" for="reward-type">Reward type</label>
+                        <select id="reward-type" name="type">
+                            <option value="one-time">One-time</option>
+                            <option value="recurring">Recurring</option>
+                        </select>
 
                         <button class="button button-primary create-button" type="submit">Add to the shop <span aria-hidden="true">↗</span></button>
                     </form>

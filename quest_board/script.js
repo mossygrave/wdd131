@@ -361,20 +361,41 @@ function renderRewards() {
         return;
     }
 
-    for (const reward of state.rewards) {
-        const card = document.createElement("article");
-        card.className = "reward-card";
-        card.innerHTML = `
-            <span class="reward-accent" aria-hidden="true">✦</span>
-            <div class="quest-details">
-                <strong>${escapeHtml(reward.title)}</strong>
-                ${reward.description ? `<p class="quest-description">${escapeHtml(reward.description)}</p>` : ""}
-                <div class="quest-meta"><span>◉ ${reward.cost.toLocaleString()} coins</span></div>
-            </div>
-            <button class="quest-action reward-buy" type="button" data-reward-id="${escapeHtml(reward.id)}">Redeem</button>
-        `;
-        card.querySelector(".reward-buy").addEventListener("click", () => purchaseReward(reward.id));
-        rewardList.append(card);
+    const rewardGroups = [
+        { type: "one-time", title: "One-time rewards" },
+        { type: "recurring", title: "Recurring rewards" }
+    ];
+    for (const group of rewardGroups) {
+        const rewards = state.rewards.filter((reward) => (reward.type === "one-time" ? "one-time" : "recurring") === group.type);
+        if (rewards.length === 0) continue;
+
+        const section = document.createElement("section");
+        section.className = "reward-group";
+        const heading = document.createElement("h3");
+        heading.className = "reward-group-heading";
+        heading.textContent = group.title;
+        section.append(heading);
+
+        for (const reward of rewards) {
+            const card = document.createElement("article");
+            card.className = "reward-card";
+            card.innerHTML = `
+                <span class="reward-accent" aria-hidden="true">✦</span>
+                <div class="quest-details">
+                    <strong>${escapeHtml(reward.title)}</strong>
+                    ${reward.description ? `<p class="quest-description">${escapeHtml(reward.description)}</p>` : ""}
+                    <div class="quest-meta"><span>◉ ${reward.cost.toLocaleString()} coins</span></div>
+                </div>
+                <div class="reward-actions">
+                    <button class="quest-action reward-buy" type="button" data-reward-id="${escapeHtml(reward.id)}">Redeem</button>
+                    <button class="quest-action reward-delete" type="button" data-delete-reward-id="${escapeHtml(reward.id)}" aria-label="Delete reward: ${escapeHtml(reward.title)}">Delete</button>
+                </div>
+            `;
+            card.querySelector(".reward-buy").addEventListener("click", () => purchaseReward(reward.id));
+            card.querySelector(".reward-delete").addEventListener("click", () => deleteReward(reward.id));
+            section.append(card);
+        }
+        rewardList.append(section);
     }
 }
 
@@ -399,13 +420,13 @@ function renderQuestLog() {
             ? `<button class="quest-action" type="button" data-action="schedule"${todayPlan ? " disabled" : ""}>${todayPlan ? `Scheduled · ${formatTime(todayPlan.startTime)}` : "Add to today"}</button>`
             : "";
         const completeAction = quest.type === "main"
-            ? '<button class="quest-action complete" type="button" data-action="complete">Complete</button>'
+            ? `<button class="quest-action complete" type="button" data-action="complete">Complete${quest.reward ? ` · +${quest.reward} ◉` : ""}</button>`
             : `<button class="quest-action complete" type="button" data-action="complete">Complete · +${quest.reward} ◉</button>`;
         const actions = `<div class="quest-actions">${scheduleAction}${completeAction}<button class="quest-action" type="button" data-action="delete" aria-label="Delete quest: ${escapeHtml(quest.title)}">Delete</button></div>`;
         const description = quest.description
             ? `<p class="quest-description">${escapeHtml(quest.description)}</p>`
             : "";
-        const rewardMeta = quest.type === "side" ? `<span>◉ ${quest.reward} coins</span>` : "";
+        const rewardMeta = quest.reward ? `<span>◉ ${quest.reward} coins</span>` : "";
 
         card.innerHTML = `
             <span class="quest-accent" aria-hidden="true"></span>
@@ -450,7 +471,7 @@ function renderCompletedQuests() {
                     <span class="type-badge">${quest.type === "main" ? "Main" : "Side"}</span>
                 </div>
                 ${quest.description ? `<p class="quest-description">${escapeHtml(quest.description)}</p>` : ""}
-                <div class="quest-meta"><span>${formatDuration(quest.duration)}</span>${quest.type === "side" ? `<span>◉ ${quest.reward} coins earned</span>` : ""}</div>
+                <div class="quest-meta"><span>${formatDuration(quest.duration)}</span>${quest.reward ? `<span>◉ ${quest.reward} coins earned</span>` : ""}</div>
             </div>
             <span class="completion-mark" aria-label="Completed">✓</span>
         `;
@@ -599,7 +620,8 @@ function completeQuest(questId) {
     );
     quest.completed = true;
     quest.completedAt = Date.now();
-    if (quest.type === "side") state.coins += quest.reward;
+    const reward = Number.isInteger(quest.reward) && quest.reward > 0 ? quest.reward : 0;
+    state.coins += reward;
     if (quest.type === "main") {
         for (const [dateKey, plans] of Object.entries(state.plans)) {
             state.plans[dateKey] = plans.filter((plan) => plan.questId !== questId);
@@ -609,13 +631,13 @@ function completeQuest(questId) {
     if (saveState()) {
         render();
         celebrate();
-        announce(quest.type === "side"
-            ? `${quest.title} completed. You earned ${quest.reward} coins.`
+        announce(reward > 0
+            ? `${quest.title} completed. You earned ${reward} coins.`
             : `${quest.title} completed and moved to completed quests.`);
     } else {
         quest.completed = false;
         delete quest.completedAt;
-        if (quest.type === "side") state.coins -= quest.reward;
+        state.coins -= reward;
         if (quest.type === "main") state.plans = previousPlans;
     }
 }
@@ -685,13 +707,32 @@ function purchaseReward(rewardId) {
         return;
     }
 
+    const rewardIndex = state.rewards.indexOf(reward);
     state.coins -= reward.cost;
+    const isOneTime = reward.type === "one-time";
+    if (isOneTime) state.rewards.splice(rewardIndex, 1);
     if (saveState()) {
         render();
         celebrate();
-        announce(`${reward.title} redeemed for ${reward.cost} coins. Enjoy your reward!`);
+        announce(isOneTime
+            ? `${reward.title} redeemed for ${reward.cost} coins and removed from the shop. Enjoy your reward!`
+            : `${reward.title} redeemed for ${reward.cost} coins. Enjoy your reward!`);
     } else {
         state.coins += reward.cost;
+        if (isOneTime) state.rewards.splice(rewardIndex, 0, reward);
+    }
+}
+
+function deleteReward(rewardId) {
+    const rewardIndex = state.rewards.findIndex((item) => item.id === rewardId);
+    if (rewardIndex === -1) return;
+
+    const [reward] = state.rewards.splice(rewardIndex, 1);
+    if (saveState()) {
+        render();
+        announce(`${reward.title} removed from the shop.`);
+    } else {
+        state.rewards.splice(rewardIndex, 0, reward);
     }
 }
 
@@ -715,11 +756,14 @@ function removeRecurringEvent(eventId) {
     }
 }
 
-questType.addEventListener("change", () => {
-    const hasCoinReward = ["side", "daily"].includes(questType.value);
+function updateRewardField() {
+    const hasCoinReward = ["main", "side", "daily"].includes(questType.value);
     rewardField.hidden = !hasCoinReward;
     rewardInput.required = hasCoinReward;
-});
+}
+
+questType.addEventListener("change", updateRewardField);
+updateRewardField();
 
 questForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -733,18 +777,17 @@ questForm.addEventListener("submit", (event) => {
         createdAt: Date.now(),
         completed: false
     };
-    if (["side", "daily"].includes(quest.type)) quest.reward = Number(formData.get("reward"));
+    if (["main", "side", "daily"].includes(quest.type)) quest.reward = Number(formData.get("reward"));
 
-    if (!quest.title || !Number.isInteger(quest.duration) || quest.duration < 1 || (["side", "daily"].includes(quest.type) && (!Number.isInteger(quest.reward) || quest.reward < 1))) {
-        announce("Please enter a quest name, a valid duration, and a valid coin reward for side and daily quests.");
+    if (!quest.title || !Number.isInteger(quest.duration) || quest.duration < 1 || (["main", "side", "daily"].includes(quest.type) && (!Number.isInteger(quest.reward) || quest.reward < 1))) {
+        announce("Please enter a quest name, a valid duration, and a valid coin reward.");
         return;
     }
 
     state.quests.push(quest);
     if (saveState()) {
         questForm.reset();
-        rewardField.hidden = true;
-        rewardInput.required = false;
+        updateRewardField();
         render();
         const typeLabel = quest.type === "main" ? "Main" : quest.type === "side" ? "Side" : "Daily";
         announce(`${typeLabel} quest added to your quest log.`);
@@ -758,11 +801,12 @@ rewardForm.addEventListener("submit", (event) => {
         id: createId(),
         title: String(formData.get("title")).trim(),
         description: String(formData.get("description")).trim(),
-        cost: Number(formData.get("cost"))
+        cost: Number(formData.get("cost")),
+        type: String(formData.get("type"))
     };
 
-    if (!reward.title || !Number.isInteger(reward.cost) || reward.cost < 1) {
-        announce("Please enter a reward name and a valid coin cost.");
+    if (!reward.title || !Number.isInteger(reward.cost) || reward.cost < 1 || !["one-time", "recurring"].includes(reward.type)) {
+        announce("Please enter a reward name, a valid coin cost, and a reward type.");
         return;
     }
 
