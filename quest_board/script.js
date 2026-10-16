@@ -392,9 +392,16 @@ function renderQuestLog() {
     for (const quest of sortedQuests) {
         const card = document.createElement("article");
         card.className = `quest-card ${quest.type}`;
-        const actions = quest.type === "main"
-            ? '<div class="quest-actions"><button class="quest-action" type="button" data-action="schedule">Add to today</button><button class="quest-action complete" type="button" data-action="complete">Complete</button></div>'
-            : `<div class="quest-actions"><button class="quest-action complete" type="button" data-action="complete">Complete · +${quest.reward} ◉</button></div>`;
+        const todayPlan = quest.type === "main"
+            ? (state.plans[localDateKey()] ?? []).find((plan) => plan.questId === quest.id)
+            : null;
+        const scheduleAction = quest.type === "main"
+            ? `<button class="quest-action" type="button" data-action="schedule"${todayPlan ? " disabled" : ""}>${todayPlan ? `Scheduled · ${formatTime(todayPlan.startTime)}` : "Add to today"}</button>`
+            : "";
+        const completeAction = quest.type === "main"
+            ? '<button class="quest-action complete" type="button" data-action="complete">Complete</button>'
+            : `<button class="quest-action complete" type="button" data-action="complete">Complete · +${quest.reward} ◉</button>`;
+        const actions = `<div class="quest-actions">${scheduleAction}${completeAction}<button class="quest-action" type="button" data-action="delete" aria-label="Delete quest: ${escapeHtml(quest.title)}">Delete</button></div>`;
         const description = quest.description
             ? `<p class="quest-description">${escapeHtml(quest.description)}</p>`
             : "";
@@ -414,6 +421,7 @@ function renderQuestLog() {
         `;
         card.querySelector("[data-action='schedule']")?.addEventListener("click", () => openSchedule(quest.id));
         card.querySelector("[data-action='complete']")?.addEventListener("click", () => completeQuest(quest.id));
+        card.querySelector("[data-action='delete']")?.addEventListener("click", () => deleteQuest(quest.id));
         questList.append(card);
     }
 }
@@ -609,6 +617,32 @@ function completeQuest(questId) {
         delete quest.completedAt;
         if (quest.type === "side") state.coins -= quest.reward;
         if (quest.type === "main") state.plans = previousPlans;
+    }
+}
+
+function deleteQuest(questId) {
+    const questIndex = state.quests.findIndex((item) => item.id === questId && ["main", "side"].includes(item.type) && !item.completed);
+    if (questIndex === -1) return;
+
+    const [quest] = state.quests.splice(questIndex, 1);
+    const previousPlans = Object.fromEntries(
+        Object.entries(state.plans).map(([dateKey, plans]) => [dateKey, [...plans]])
+    );
+    for (const [dateKey, plans] of Object.entries(state.plans)) {
+        const remainingPlans = plans.filter((plan) => plan.questId !== questId);
+        if (remainingPlans.length > 0) {
+            state.plans[dateKey] = remainingPlans;
+        } else {
+            delete state.plans[dateKey];
+        }
+    }
+
+    if (saveState()) {
+        render();
+        announce(`${quest.title} deleted.`);
+    } else {
+        state.quests.splice(questIndex, 0, quest);
+        state.plans = previousPlans;
     }
 }
 
