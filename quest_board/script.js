@@ -28,7 +28,11 @@ const calendarGrid = document.querySelector("#calendar-grid");
 const calendarPeriod = document.querySelector("#calendar-period");
 const selectedDayEvents = document.querySelector("#selected-day-events");
 const calendarEventForm = document.querySelector("#calendar-event-form");
-const recurringEventList = document.querySelector("#recurring-event-list");
+const calendarEventType = document.querySelector("#calendar-event-type");
+const calendarEventDate = document.querySelector("#calendar-event-date");
+const oneTimeDateField = document.querySelector("#one-time-date-field");
+const recurringWeekdays = document.querySelector("#recurring-weekdays");
+const calendarEventList = document.querySelector("#calendar-event-list");
 const weekViewButton = document.querySelector("#week-view-button");
 const monthViewButton = document.querySelector("#month-view-button");
 const confettiLayer = document.querySelector("#confetti-layer");
@@ -47,7 +51,8 @@ let state = {
     plans: {},
     coins: 0,
     rewards: [],
-    recurringEvents: []
+    recurringEvents: [],
+    oneTimeEvents: []
 };
 let selectedCalendarDate = new Date();
 let calendarMode = "week";
@@ -93,7 +98,8 @@ function loadState() {
             state = {
                 ...parsed,
                 rewards: Array.isArray(parsed.rewards) ? parsed.rewards : [],
-                recurringEvents: Array.isArray(parsed.recurringEvents) ? parsed.recurringEvents : []
+                recurringEvents: Array.isArray(parsed.recurringEvents) ? parsed.recurringEvents : [],
+                oneTimeEvents: Array.isArray(parsed.oneTimeEvents) ? parsed.oneTimeEvents : []
             };
         } else {
             announce("Saved quest data could not be read. Starting with an empty quest board.");
@@ -171,12 +177,25 @@ function getPlansForDate(date) {
 function getRecurringEventsForDate(date) {
     return state.recurringEvents
         .filter((event) => event.weekdays.includes(date.getDay()))
+        .map((event) => ({ ...event, eventType: "recurring" }));
+}
+
+function getOneTimeEventsForDate(date) {
+    const dateKey = localDateKey(date);
+    return state.oneTimeEvents
+        .filter((event) => event.date === dateKey)
+        .map((event) => ({ ...event, eventType: "one-time" }));
+}
+
+function getEventsForDate(date) {
+    return [...getRecurringEventsForDate(date), ...getOneTimeEventsForDate(date)]
         .sort((first, second) => first.startTime.localeCompare(second.startTime));
 }
 
 function getCalendarItemsForDate(date) {
-    const events = getRecurringEventsForDate(date).map((event) => ({
+    const events = getEventsForDate(date).map((event) => ({
         kind: "event",
+        eventType: event.eventType,
         id: event.id,
         title: event.title,
         description: event.description,
@@ -274,6 +293,7 @@ function renderCalendar() {
         `;
         cell.addEventListener("click", () => {
             selectedCalendarDate = date;
+            calendarEventDate.value = dateKey;
             renderCalendar();
         });
         calendarGrid.append(cell);
@@ -284,7 +304,7 @@ function renderCalendar() {
     document.querySelector("#calendar-next").setAttribute("aria-label", `Next ${previousUnit}`);
     document.querySelector("#calendar-plan-quest").textContent = `＋ Plan a main quest on ${formatPeriodDate(selectedCalendarDate, { month: "short", day: "numeric" })}`;
     renderSelectedDay();
-    renderRecurringEvents();
+    renderCalendarEvents();
 }
 
 function renderSelectedDay() {
@@ -294,53 +314,78 @@ function renderSelectedDay() {
     selectedDayEvents.innerHTML = "";
 
     if (items.length === 0) {
-        selectedDayEvents.innerHTML = '<div class="journal-empty">Nothing on the calendar yet. Add a recurring event or plan a main quest for this day.</div>';
+        selectedDayEvents.innerHTML = '<div class="journal-empty">Nothing on the calendar yet. Add an event or plan a main quest for this day.</div>';
         return;
     }
 
     for (const item of items) {
         const card = document.createElement("article");
         card.className = `calendar-agenda-item ${item.kind}`;
+        const actionLabel = item.kind === "quest"
+            ? `Remove ${item.title} from ${displayCalendarDate(selectedCalendarDate)}`
+            : `Delete ${item.eventType} event ${item.title}`;
         card.innerHTML = `
             <span class="agenda-time">${formatCalendarTime(item.startTime)}<span>to ${formatCalendarTime(item.endTime)}</span></span>
             <span class="agenda-rule" aria-hidden="true"></span>
             <div class="quest-details">
                 <div class="quest-title-row">
                     <strong>${escapeHtml(item.title)}</strong>
-                    <span class="type-badge">${item.kind === "quest" ? "Main quest" : "Event"}</span>
+                    <span class="type-badge">${item.kind === "quest" ? "Main quest" : item.eventType === "one-time" ? "One-time event" : "Recurring event"}</span>
                 </div>
                 ${item.description ? `<p class="quest-description">${escapeHtml(item.description)}</p>` : ""}
             </div>
-            ${item.kind === "quest" ? `<button class="remove-plan" type="button" aria-label="Remove ${escapeHtml(item.title)} from ${escapeHtml(displayCalendarDate(selectedCalendarDate))}">Remove</button>` : ""}
+            <button class="remove-plan" type="button" aria-label="${escapeHtml(actionLabel)}">${item.kind === "quest" ? "Remove" : "Delete"}</button>
         `;
         if (item.kind === "quest") card.querySelector(".remove-plan").addEventListener("click", () => removeFromPlan(item.id, dateKey));
+        else card.querySelector(".remove-plan").addEventListener("click", () => removeCalendarEvent(item.id, item.eventType));
         selectedDayEvents.append(card);
     }
 }
 
-function renderRecurringEvents() {
-    recurringEventList.innerHTML = "";
-    document.querySelector("#recurring-event-count").textContent = state.recurringEvents.length;
-    if (state.recurringEvents.length === 0) {
-        recurringEventList.innerHTML = '<div class="journal-empty">No recurring events yet.<br>Add a work shift, class, or other weekly commitment.</div>';
+function renderCalendarEvents() {
+    calendarEventList.innerHTML = "";
+    const eventCount = state.recurringEvents.length + state.oneTimeEvents.length;
+    document.querySelector("#calendar-event-count").textContent = eventCount;
+    if (eventCount === 0) {
+        calendarEventList.innerHTML = '<div class="journal-empty">No calendar events yet.<br>Add a one-time event or weekly commitment.</div>';
         return;
     }
 
     const weekdayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    for (const event of state.recurringEvents) {
-        const card = document.createElement("article");
-        card.className = "recurring-event-card";
-        const days = [...event.weekdays].sort((first, second) => first - second).map((day) => weekdayNames[day]).join(", ");
-        card.innerHTML = `
-            <span class="event-color-mark" aria-hidden="true"></span>
-            <div class="quest-details">
-                <strong>${escapeHtml(event.title)}</strong>
-                <p class="quest-description">${escapeHtml(days)} · ${formatCalendarTime(event.startTime)}–${formatCalendarTime(event.endTime)}${event.description ? ` · ${escapeHtml(event.description)}` : ""}</p>
-            </div>
-            <button class="remove-plan" type="button" aria-label="Delete recurring event ${escapeHtml(event.title)}">Delete</button>
-        `;
-        card.querySelector(".remove-plan").addEventListener("click", () => removeRecurringEvent(event.id));
-        recurringEventList.append(card);
+    const groups = [
+        { type: "one-time", title: "One-time events", events: state.oneTimeEvents },
+        { type: "recurring", title: "Recurring events", events: state.recurringEvents }
+    ];
+    for (const group of groups) {
+        if (group.events.length === 0) continue;
+        const section = document.createElement("section");
+        section.className = "calendar-event-group";
+        const heading = document.createElement("h3");
+        heading.className = "calendar-event-group-heading";
+        heading.textContent = group.title;
+        section.append(heading);
+
+        const events = group.type === "one-time"
+            ? [...group.events].sort((first, second) => first.date.localeCompare(second.date) || first.startTime.localeCompare(second.startTime))
+            : group.events;
+        for (const event of events) {
+            const card = document.createElement("article");
+            card.className = "calendar-event-card";
+            const schedule = group.type === "one-time"
+                ? `${formatPeriodDate(dateFromKey(event.date), { weekday: "short", month: "short", day: "numeric" })}`
+                : [...event.weekdays].sort((first, second) => first - second).map((day) => weekdayNames[day]).join(", ");
+            card.innerHTML = `
+                <span class="event-color-mark" aria-hidden="true"></span>
+                <div class="quest-details">
+                    <strong>${escapeHtml(event.title)}</strong>
+                    <p class="quest-description">${escapeHtml(schedule)} · ${formatCalendarTime(event.startTime)}–${formatCalendarTime(event.endTime)}${event.description ? ` · ${escapeHtml(event.description)}` : ""}</p>
+                </div>
+                <button class="remove-plan" type="button" aria-label="Delete ${group.type} event ${escapeHtml(event.title)}">Delete</button>
+            `;
+            card.querySelector(".remove-plan").addEventListener("click", () => removeCalendarEvent(event.id, group.type));
+            section.append(card);
+        }
+        calendarEventList.append(section);
     }
 }
 
@@ -413,6 +458,17 @@ function renderQuestLog() {
     for (const quest of sortedQuests) {
         const card = document.createElement("article");
         card.className = `quest-card ${quest.type}`;
+        if (quest.type === "main") {
+            card.draggable = true;
+            card.title = "Drag this main quest to today's plan";
+            card.addEventListener("dragstart", (event) => {
+                if (!event.dataTransfer) return;
+                event.dataTransfer.setData("text/plain", quest.id);
+                event.dataTransfer.effectAllowed = "move";
+                card.classList.add("is-dragging");
+            });
+            card.addEventListener("dragend", () => card.classList.remove("is-dragging"));
+        }
         const todayPlan = quest.type === "main"
             ? (state.plans[localDateKey()] ?? []).find((plan) => plan.questId === quest.id)
             : null;
@@ -567,6 +623,29 @@ function render() {
     updateScheduleOptions();
     renderCalendar();
 }
+
+mainQuestList.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+    mainQuestList.classList.add("is-drop-target");
+});
+mainQuestList.addEventListener("dragleave", (event) => {
+    if (!mainQuestList.contains(event.relatedTarget)) {
+        mainQuestList.classList.remove("is-drop-target");
+    }
+});
+mainQuestList.addEventListener("drop", (event) => {
+    event.preventDefault();
+    mainQuestList.classList.remove("is-drop-target");
+    const questId = event.dataTransfer?.getData("text/plain");
+    const quest = state.quests.find((item) => item.id === questId && item.type === "main" && !item.completed);
+    if (!quest) return;
+    if ((state.plans[localDateKey()] ?? []).some((plan) => plan.questId === quest.id)) {
+        announce(`${quest.title} is already scheduled for today.`);
+        return;
+    }
+    openSchedule(quest.id);
+});
 
 function updateScheduleOptions() {
     const targetDate = scheduleDate.value ? dateFromKey(scheduleDate.value) : new Date();
@@ -745,14 +824,16 @@ function removeFromPlan(questId, dateKey = localDateKey()) {
     }
 }
 
-function removeRecurringEvent(eventId) {
-    const existingEvents = state.recurringEvents;
-    state.recurringEvents = existingEvents.filter((event) => event.id !== eventId);
+function removeCalendarEvent(eventId, eventType) {
+    const events = eventType === "one-time" ? state.oneTimeEvents : state.recurringEvents;
+    const eventIndex = events.findIndex((event) => event.id === eventId);
+    if (eventIndex === -1) return;
+    const [event] = events.splice(eventIndex, 1);
     if (saveState()) {
         renderCalendar();
-        announce("Recurring event removed from the calendar.");
+        announce(`${event.title} removed from the calendar.`);
     } else {
-        state.recurringEvents = existingEvents;
+        events.splice(eventIndex, 0, event);
     }
 }
 
@@ -842,13 +923,13 @@ scheduleForm.addEventListener("submit", (event) => {
         return newStartMinutes < planEnd && planStart < newEndMinutes;
     });
     const selectedDate = dateFromKey(dateKey);
-    const overlapsEvent = getRecurringEventsForDate(selectedDate).some((event) => (
+    const overlapsEvent = getEventsForDate(selectedDate).some((event) => (
         newStartMinutes < timeToMinutes(event.endTime) &&
         timeToMinutes(event.startTime) < newEndMinutes
     ));
     if (overlapsPlan || overlapsEvent) {
         announce(overlapsEvent
-            ? "That time overlaps a recurring event. Choose a different start time."
+            ? "That time overlaps a calendar event. Choose a different start time."
             : "That time overlaps another main quest. Choose a different start time.");
         return;
     }
@@ -864,51 +945,107 @@ scheduleForm.addEventListener("submit", (event) => {
     }
 });
 
+function updateCalendarEventFields() {
+    const isOneTime = calendarEventType.value === "one-time";
+    oneTimeDateField.hidden = !isOneTime;
+    calendarEventDate.required = isOneTime;
+    recurringWeekdays.hidden = isOneTime;
+    if (isOneTime && !calendarEventDate.value) {
+        calendarEventDate.value = localDateKey(selectedCalendarDate);
+    }
+}
+
+calendarEventType.addEventListener("change", updateCalendarEventFields);
+calendarEventDate.value = localDateKey(selectedCalendarDate);
+updateCalendarEventFields();
+
 calendarEventForm.addEventListener("submit", (event) => {
     event.preventDefault();
     const formData = new FormData(calendarEventForm);
-    const weekdays = formData.getAll("weekdays").map(Number);
-    const recurringEvent = {
+    const eventType = String(formData.get("eventType"));
+    const calendarEvent = {
         id: createId(),
         title: String(formData.get("title")).trim(),
         description: String(formData.get("description")).trim(),
-        weekdays,
         startTime: String(formData.get("startTime")),
         endTime: String(formData.get("endTime"))
     };
 
-    if (!recurringEvent.title || weekdays.length === 0) {
-        announce("Add an event name and choose at least one weekday.");
+    if (!calendarEvent.title || !["one-time", "recurring"].includes(eventType)) {
+        announce("Add an event name and choose a valid event type.");
         return;
     }
-    if (!recurringEvent.startTime || !recurringEvent.endTime || timeToMinutes(recurringEvent.endTime) <= timeToMinutes(recurringEvent.startTime)) {
+    if (!calendarEvent.startTime || !calendarEvent.endTime || timeToMinutes(calendarEvent.endTime) <= timeToMinutes(calendarEvent.startTime)) {
         announce("Choose a valid end time later than the event start time.");
         return;
     }
 
-    const todayKey = localDateKey();
-    const conflictsWithQuest = Object.entries(state.plans).some(([dateKey, plans]) => {
-        if (dateKey < todayKey || !recurringEvent.weekdays.includes(dateFromKey(dateKey).getDay())) return false;
-        return plans.some((plan) => {
-            const quest = state.quests.find((item) => item.id === plan.questId);
-            if (!quest || quest.completed) return false;
-            const planStart = timeToMinutes(plan.startTime);
-            const planEnd = planStart + quest.duration;
-            return timeToMinutes(recurringEvent.startTime) < planEnd && planStart < timeToMinutes(recurringEvent.endTime);
+    let eventCollection;
+    if (eventType === "recurring") {
+        const weekdays = formData.getAll("weekdays").map(Number);
+        if (weekdays.length === 0) {
+            announce("Choose at least one weekday for a recurring event.");
+            return;
+        }
+        calendarEvent.weekdays = weekdays;
+        eventCollection = state.recurringEvents;
+
+        const conflictsWithQuest = Object.entries(state.plans).some(([dateKey, plans]) => {
+            if (dateKey < localDateKey() || !weekdays.includes(dateFromKey(dateKey).getDay())) return false;
+            return plans.some((plan) => {
+                const quest = state.quests.find((item) => item.id === plan.questId);
+                if (!quest || quest.completed) return false;
+                const planStart = timeToMinutes(plan.startTime);
+                const planEnd = planStart + quest.duration;
+                return timeToMinutes(calendarEvent.startTime) < planEnd && planStart < timeToMinutes(calendarEvent.endTime);
+            });
         });
-    });
-    if (conflictsWithQuest) {
-        announce("This recurring event overlaps a planned main quest. Adjust one of the times before adding it.");
-        return;
+        const conflictsWithOneTimeEvent = state.oneTimeEvents.some((existingEvent) => (
+            existingEvent.date >= localDateKey() &&
+            weekdays.includes(dateFromKey(existingEvent.date).getDay()) &&
+            timeToMinutes(calendarEvent.startTime) < timeToMinutes(existingEvent.endTime) &&
+            timeToMinutes(existingEvent.startTime) < timeToMinutes(calendarEvent.endTime)
+        ));
+        if (conflictsWithQuest || conflictsWithOneTimeEvent) {
+            announce("This recurring event overlaps a planned main quest or one-time event. Adjust one of the times before adding it.");
+            return;
+        }
+    } else {
+        calendarEvent.date = String(formData.get("date"));
+        if (!calendarEvent.date || Number.isNaN(dateFromKey(calendarEvent.date).getTime())) {
+            announce("Choose a valid date for the one-time event.");
+            return;
+        }
+        eventCollection = state.oneTimeEvents;
+        const date = dateFromKey(calendarEvent.date);
+        const newStart = timeToMinutes(calendarEvent.startTime);
+        const newEnd = timeToMinutes(calendarEvent.endTime);
+        const conflictsWithQuest = getPlansForDate(date).some((plan) => {
+            const planStart = timeToMinutes(plan.startTime);
+            const planEnd = planStart + plan.quest.duration;
+            return newStart < planEnd && planStart < newEnd;
+        });
+        const conflictsWithEvent = getEventsForDate(date).some((existingEvent) => (
+            newStart < timeToMinutes(existingEvent.endTime) &&
+            timeToMinutes(existingEvent.startTime) < newEnd
+        ));
+        if (conflictsWithQuest || conflictsWithEvent) {
+            announce("This one-time event overlaps a planned main quest or another calendar event. Adjust one of the times before adding it.");
+            return;
+        }
     }
 
-    state.recurringEvents.push(recurringEvent);
+    eventCollection.push(calendarEvent);
     if (saveState()) {
         calendarEventForm.reset();
+        calendarEventDate.value = localDateKey(selectedCalendarDate);
+        updateCalendarEventFields();
         renderCalendar();
-        announce(`${recurringEvent.title} added as a weekly recurring event.`);
+        announce(eventType === "one-time"
+            ? `${calendarEvent.title} added to the calendar.`
+            : `${calendarEvent.title} added as a weekly recurring event.`);
     } else {
-        state.recurringEvents.pop();
+        eventCollection.pop();
     }
 });
 

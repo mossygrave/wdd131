@@ -1,156 +1,205 @@
-<<<<<<< HEAD
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap');
-
+* {
+    box-sizing: border-box;
+}
 
 body {
-    font-family: 'Poppins', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
+    padding: 1.5rem;
+    color: #252525;
+    background: #fff;
+    font-family: Georgia, "Times New Roman", serif;
 }
-.skiptocontent a{
+
+.skip-link a {
     position: absolute;
-    top: -40px;
-    left: 10px;
-    background: #000;
+    z-index: 1;
+    top: -4rem;
+    left: 1rem;
+    padding: .75rem 1rem;
     color: #fff;
-    padding: 10px;
+    background: #252525;
+}
+
+.skip-link a:focus {
+    top: 1rem;
+}
+
+.site-shell {
+    display: grid;
+    width: min(100%, 900px);
+    margin: 0 auto;
+    border: 1px solid #333;
+}
+
+.site-header {
+    display: grid;
+    grid-template-columns: 1fr;
+    padding: 1rem 1.25rem 0;
+}
+
+.site-header h1 {
+    margin: 0;
+    padding: .25rem 0 .85rem;
+    color: #29212a;
+    font-size: clamp(1.5rem, 2.6vw, 1.75rem);
+    text-align: center;
+}
+
+.site-header nav {
+    border-top: 2px solid #e5dcc0;
+    border-bottom: 2px solid #e5dcc0;
+}
+
+.site-header ul {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: end;
+    gap: clamp(1rem, 5vw, 3.25rem);
+    margin: 0;
+    padding: .8rem .2rem;
+    list-style: none;
+}
+
+.site-header a {
+    color: #8b1e36;
+    font-family: Arial, sans-serif;
+    font-size: .85rem;
+    font-weight: 700;
     text-decoration: none;
 }
-.skiptocontent a:focus {
-    top: 0;
-}
-header {
-    background-color: #ffcc80;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-nav {
-    display: grid; /* Enable grid layout */
-    justify-content: end; /* Align the grid content to the end (right) */
-    justify-items: end; /* Align the items inside the grid to the end (right) */
+
+.site-header a:hover,
+.site-header a:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: .2em;
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
+.site-header a:focus-visible,
+.skip-link a:focus-visible {
+    outline: 3px solid #8b1e36;
+    outline-offset: 3px;
 }
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-    font-weight: 700;
-}
-main {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
-}
+
 .book-entry {
-    display: flex;
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: minmax(115px, 1fr) minmax(0, 3fr);
+    gap: 1.5rem;
+    margin: 1.75rem 1.25rem;
 }
-aside {
-    margin-right: 20px;
-    text-align: center;
-}
-.book-image {
-    width: 150px;
-    height: 200px;
-    background-color: #ffb74d;
-    margin-bottom: 10px;
-}
-.filters {
-    background: #ffecb3;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-select {
-    margin: 5px 0;
-    width: 100%;
-    padding: 5px;
-    font-family: 'Roboto', sans-serif;
-=======
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Roboto:wght@300;400;700&display=swap');
 
+.book-meta {
+    display: grid;
+    align-content: start;
+    justify-items: end;
+    gap: .6rem;
+    padding: .5rem 1.25rem .5rem 0;
+    border-right: 2px solid #e5dcc0;
+    font-family: Arial, sans-serif;
+    font-size: .8rem;
+    text-align: right;
+}
 
-body {
-    font-family: 'Poppins', sans-serif;
+.book-meta p {
     margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-    color: #333;
-}
-.skiptocontent a{
-    position: absolute;
-    top: -40px;
-    left: 10px;
-    background: #000;
-    color: #fff;
-    padding: 10px;
-    text-decoration: none;
-}
-.skiptocontent a:focus {
-    top: 0;
-}
-header {
-    background-color: #ffcc80;
-    padding: 20px;
-    text-align: center;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-nav {
-    display: grid; /* Enable grid layout */
-    justify-content: end; /* Align the grid content to the end (right) */
-    justify-items: end; /* Align the items inside the grid to the end (right) */
 }
 
-nav ul {
-    list-style: none;
-    padding: 0;
+.rating {
+    color: #d7a900;
+    font-size: 1.05rem;
+    letter-spacing: .08em;
 }
-nav ul li {
-    display: inline;
-    margin: 0 15px;
-    font-weight: 700;
+
+.empty-star {
+    color: #c7c7c7;
 }
-main {
-    display: flex;
-    justify-content: space-around;
-    padding: 20px;
+
+.book-review h2 {
+    margin: 0 0 .8rem;
+    color: #8b1e36;
+    font-size: 1.1rem;
 }
-.book-entry {
-    display: flex;
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
-}
-aside {
-    margin-right: 20px;
+
+.book-review figure {
+    margin: 0 0 .8rem;
     text-align: center;
 }
-.book-image {
-    width: 150px;
-    height: 200px;
-    background-color: #ffb74d;
-    margin-bottom: 10px;
+
+.book-review img {
+    display: block;
+    width: min(150px, 100%);
+    height: auto;
+    margin: 0 auto;
 }
-.filters {
-    background: #ffecb3;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+
+.book-review > p {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: .85rem;
+    line-height: 1.5;
 }
-select {
-    margin: 5px 0;
-    width: 100%;
-    padding: 5px;
-    font-family: 'Roboto', sans-serif;
->>>>>>> 85ee6b95aa5fe1c027772ef5dcec1d25d3bf4f30
+
+.site-footer {
+    padding: .7rem 1rem;
+    border-top: 2px solid #e5dcc0;
+    text-align: center;
+}
+
+.site-footer p {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    font-size: .8rem;
+}
+
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: .75rem;
+    }
+
+    .site-header {
+        padding-inline: .75rem;
+    }
+
+    .site-header h1 {
+        padding-bottom: .75rem;
+    }
+
+    .site-header ul {
+        justify-content: space-around;
+        gap: .5rem;
+    }
+
+    .book-entry {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+        margin: 1.25rem .75rem 1.5rem;
+    }
+
+    .book-meta {
+        justify-items: end;
+        gap: .45rem;
+        padding: 0 0 .9rem;
+        border-right: 0;
+        border-bottom: 2px solid #e5dcc0;
+    }
+
+    .book-review h2 {
+        font-size: 1.15rem;
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .site-header a {
+        transition: color .15s ease;
+    }
 }

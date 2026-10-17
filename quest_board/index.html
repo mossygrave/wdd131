@@ -6,13 +6,14 @@
     <meta name="theme-color" content="#17241f">
     <meta name="description" content="A personal quest board for planning your day and earning rewards.">
     <title>Quest Board — Your daily adventure</title>
+    <link rel="icon" type="image/svg+xml" href="imgs/sparkle.png">
     <link rel="stylesheet" href="stylesheet.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <header class="topbar">
         <a class="brand" href="#" aria-label="Quest Board home">
-            <span class="brand-mark" aria-hidden="true">✦</span>
+            <img class="brand-mark" src="imgs/sparkle.png" alt="">
             <span>QUEST<span class="brand-light">BOARD</span></span>
         </a>
         <div class="topbar-right">
@@ -48,6 +49,7 @@
                 <div>
                     <p class="eyebrow">THE PLAN</p>
                     <h2 id="daily-heading">Today's main quests</h2>
+                    <p class="timeline-drop-hint">Drag a main quest here to add it to today, then choose a time.</p>
                 </div>
                 <button class="button button-outline" id="open-schedule" type="button">
                     <span aria-hidden="true">＋</span> Plan a quest
@@ -70,7 +72,7 @@
         <div class="board-grid">
             <section class="panel create-panel" aria-labelledby="create-heading">
                 <div class="panel-heading">
-                    <span class="panel-icon" aria-hidden="true">✎</span>
+                    <span class="panel-icon" aria-hidden="true"><img src="imgs/pencil.png" alt=""></span>
                     <div>
                         <p class="eyebrow">ADD TO YOUR JOURNAL</p>
                         <h2 id="create-heading">Create a quest</h2>
@@ -115,7 +117,7 @@
 
             <section class="panel journal-panel" aria-labelledby="journal-heading">
                 <div class="panel-heading journal-heading">
-                    <span class="panel-icon" aria-hidden="true">▤</span>
+                    <span class="panel-icon" aria-hidden="true"><img src="imgs/quest_log.png" alt=""></span>
                     <div>
                         <p class="eyebrow">READY WHEN YOU ARE</p>
                         <h2 id="journal-heading">Quest log</h2>
@@ -132,7 +134,7 @@
                 <div class="shop-intro">
                     <p class="eyebrow">YOUR TIME, AT A GLANCE</p>
                     <h2>Calendar</h2>
-                    <p>Recurring events and planned main quests, all in one place.</p>
+                    <p>One-time events, recurring commitments, and planned main quests, all in one place.</p>
                 </div>
                 <div class="calendar-controls">
                     <div class="calendar-view-toggle" role="group" aria-label="Calendar view">
@@ -165,16 +167,25 @@
                     <div class="panel-heading">
                         <span class="panel-icon" aria-hidden="true">↻</span>
                         <div>
-                            <p class="eyebrow">MAKE SPACE FOR THE REGULARS</p>
-                            <h2 id="create-event-heading">Add a recurring event</h2>
+                            <p class="eyebrow">MAKE SPACE FOR YOUR PLANS</p>
+                            <h2 id="create-event-heading">Add a calendar event</h2>
                         </div>
                     </div>
                     <form id="calendar-event-form">
+                        <label class="field-label" for="calendar-event-type">Event type</label>
+                        <select id="calendar-event-type" name="eventType">
+                            <option value="recurring">Recurring weekly</option>
+                            <option value="one-time">One-time event</option>
+                        </select>
                         <label class="field-label" for="calendar-event-title">Event name</label>
                         <input id="calendar-event-title" name="title" type="text" maxlength="80" placeholder="e.g. Biology class" required>
                         <label class="field-label" for="calendar-event-description">A few details <span class="optional">(optional)</span></label>
                         <input id="calendar-event-description" name="description" type="text" maxlength="160" placeholder="e.g. Room 204">
-                        <fieldset class="weekday-field">
+                        <div class="form-field one-time-date-field" id="one-time-date-field" hidden>
+                            <label class="field-label" for="calendar-event-date">Date</label>
+                            <input id="calendar-event-date" name="date" type="date">
+                        </div>
+                        <fieldset class="weekday-field" id="recurring-weekdays">
                             <legend class="field-label">Repeats every week</legend>
                             <div class="weekday-options">
                                 <label><input type="checkbox" name="weekdays" value="0"> Sun</label>
@@ -199,16 +210,16 @@
                         <button class="button button-primary create-button" type="submit">Add to calendar <span aria-hidden="true">↗</span></button>
                     </form>
                 </section>
-                <section class="panel" aria-labelledby="recurring-events-heading">
+                <section class="panel" aria-labelledby="calendar-events-heading">
                     <div class="panel-heading journal-heading">
                         <span class="panel-icon" aria-hidden="true">▤</span>
                         <div>
-                            <p class="eyebrow">HAPPENS EVERY WEEK</p>
-                            <h2 id="recurring-events-heading">Recurring events</h2>
+                            <p class="eyebrow">YOUR CALENDAR COMMITMENTS</p>
+                            <h2 id="calendar-events-heading">Calendar events</h2>
                         </div>
-                        <span class="quest-count" id="recurring-event-count">0</span>
+                        <span class="quest-count" id="calendar-event-count">0</span>
                     </div>
-                    <div class="recurring-event-list" id="recurring-event-list" aria-live="polite"></div>
+                    <div class="calendar-event-list" id="calendar-event-list" aria-live="polite"></div>
                 </section>
             </div>
         </section>
