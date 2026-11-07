@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Interact with Snortleblat character card.">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Snortleblat | Character Card">
+    <meta property="og:description" content="Snortleblat a level 5 swamp beast diplomat with 100 health.">
+    <meta property="og:url" content="mossygrave.github.io/wdd131/charactercard">
+    <meta property="og:image" content="snortleblat.webp">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Snortleblat Character Card">
+    <meta name="twitter:description" content="Snortleblat, a level 5 swamp beast diplomat with 100 health.">
+    <meta name="twitter:image" content="snortleblat.webp">
+
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="apple-touch-icon.svg">
+    <link rel="stylesheet" href="styles.css">
+    <script src="script.js" defer></script>
+    <title>Snortleblat | Character Card</title>
+  </head>
+  <body>
+    <main>
+      <section class="card" aria-labelledby="character-name">
+        <img
+          class="image"
+          src="snortleblat.webp"
+          alt="Snortleblat, a friendly swamp beast standing in a misty wetland"
+          width="800"
+          height="800"
+        >
+
+        <h1 class="name" id="character-name">Snortleblat</h1>
+
+        <div class="stats" aria-label="Character statistics">
+          <p><strong>Class:</strong> <span id="class-value">Swamp Beast Diplomat</span></p>
+          <p><strong>Level:</strong> <span id="level-value">5</span></p>
+          <p><strong>Health:</strong> <span id="health-value">100</span></p>
+        </div>
+
+        <div class="buttons">
+          <button id="attack-button" type="button">Attacked</button>
+          <button id="level-up-button" type="button">Level Up</button>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
