@@ -1,4 +1,4 @@
-export const recipes = [
+window.recipes = [
 	{
 		author: 'Provo High Culinary Students',
 		url: '',
@@ -280,4 +280,3 @@ export const recipes = [
 	}
 ]
 
-export default recipes

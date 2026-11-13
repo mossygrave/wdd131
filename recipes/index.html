@@ -1,41 +1,46 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Recipe Book</title>
+    <meta name="description" content="RecipeBook: simple, delicious recipes for every occasion.">
+    <title>RecipeBook</title>
     <link rel="stylesheet" href="recipes.css">
-    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="RecipeBook">
+    <meta property="og:description" content="Simple, delicious recipes for every occasion.">
+    <meta property="og:url" content="https://wddbyui.github.io/wdd131/recipes/">
+    <meta property="og:image" content="https://wddbyui.github.io/wdd131/recipes/images/social-preview.svg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="RecipeBook">
+    <meta name="twitter:description" content="Simple, delicious recipes for every occasion.">
+    <meta name="twitter:image" content="https://wddbyui.github.io/wdd131/recipes/images/social-preview.svg">
+    <link rel="icon" href="images/favicon.svg">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.svg">
 </head>
 <body>
-    <header>
-        <img src="images/recipe-book.png" alt="Recipe Book Logo">
-        <h1>RecipeBook</h1>
-        
-        <form class="search-form">
-            <label for="search">Find a recipe</label>
-            <input type="text" id="search" placeholder="Find a recipe">
-            <button type="submit"><img src="images/search.svg" alt="Search icon"></button>
+    <header class="site-header">
+        <a class="brand" href="./" aria-label="RecipeBook home">
+            <img src="images/recipe-book.png" alt="">
+            <span>RecipeBook</span>
+        </a>
+        <form class="search-form" role="search">
+            <label class="visually-hidden" for="search">Find a recipe</label>
+            <input type="search" id="search" placeholder="Find a recipe">
+            <button type="submit" aria-label="Search recipes"><img src="images/search.svg" alt=""></button>
         </form>
     </header>
-    
-    <main>
-         
-    </main>
-    
+    <main aria-live="polite"></main>
     <footer>
-        
+        <a class="flaticon-credit" href="https://www.flaticon.com/free-icons/recipe" title="recipe icons">Recipe icons created by Freepik - Flaticon</a>
         <div class="social">
-            <!-- Social media icons provided under CC from https://www.iconfinder.com/AlfredoCreates  -->
-            <a href="https://www.instagram.com/"><img src="images/instagram_icon.svg" alt="Instagram"></a>
-            <a href="https://www.youtube.com/"><img src="images/youtube_icon.svg" alt="YouTube"></a>
-            <a href="https://www.pinterest.com/"><img src="images/pinterest_icon.svg" alt="Pinterest"></a>
+            <!-- Social media icons provided under CC from https://www.iconfinder.com/AlfredoCreates -->
+            <a href="https://www.instagram.com/" aria-label="Instagram"><img src="images/instagram_icon.svg" alt=""></a>
+            <a href="https://www.youtube.com/" aria-label="YouTube"><img src="images/youtube_icon.svg" alt=""></a>
+            <a href="https://www.pinterest.com/" aria-label="Pinterest"><img src="images/pinterest_icon.svg" alt=""></a>
         </div>
-        <p style="font-size: 0.6em;"><a href="https://www.flaticon.com/free-icons/recipe" title="recipe icons">Recipe icons created by Freepik - Flaticon</a></p>
     </footer>
-    
-    <script src="main.js" type="module" defer></script>
-    
-    
+    <script src="recipes.mjs"></script>
+    <script src="main.js"></script>
 </body>
 </html>
