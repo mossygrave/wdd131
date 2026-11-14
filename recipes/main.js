@@ -1,5 +1,10 @@
 const recipes = window.recipes;
 
+function getRandomListEntry(list) {
+    const randomIndex = Math.floor(Math.random() * list.length);
+    return list[randomIndex];
+}
+
 function recipeTemplate(recipe) {
     return `
     <figure class="recipe">
@@ -37,20 +42,18 @@ function renderRecipes(recipeList) {
     mainContainer.innerHTML = `<div class="recipes-container">${recipesHTML}</div>`;
 }
 
-const appleCrisp = recipes.find(recipe => recipe.name === "Apple Crisp") || recipes[0];
-renderRecipes([appleCrisp]);
+renderRecipes([getRandomListEntry(recipes)]);
 
 function filterRecipes(query) {
     const lowerQuery = query.toLowerCase();
     return recipes.filter(recipe => recipe.name.toLowerCase().includes(lowerQuery)
         || recipe.description.toLowerCase().includes(lowerQuery)
-        || recipe.tags.some(tag => tag.toLowerCase().includes(lowerQuery))
-        || recipe.recipeIngredient.some(ingredient => ingredient.toLowerCase().includes(lowerQuery)))
+        || recipe.tags.some(tag => tag.toLowerCase().includes(lowerQuery)))
         .sort((a, b) => a.name.localeCompare(b.name));
 }
 
 document.querySelector(".search-form").addEventListener("submit", event => {
     event.preventDefault();
     const query = document.querySelector("#search").value.trim();
-    renderRecipes(query ? filterRecipes(query) : [appleCrisp]);
+    renderRecipes(filterRecipes(query));
 });
