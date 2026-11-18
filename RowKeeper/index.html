@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta name="theme-color" content="#315b49">
+        <title>Rowkeeper</title>
+        <link rel="icon" type="image/png" sizes="48x48" href="images/favicon.png">
+        <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+        <link rel="manifest" href="manifest.webmanifest">
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <header>
+            <div class="brand">
+                <img class="brand-mark" src="images/rowkeeper-icon.png" alt="">
+                <div>rowkeeper</div>
+            </div>
+            <div class="head-actions">
+                <span class="saved" id="saveStatus" aria-live="polite">Saved on this device</span>
+                <button id="createChartBtn">▦ Draw chart</button>
+                <button id="libraryBtn">My projects</button>
+                <button id="uploadBtn">Replace chart</button>
+                <button class="primary" id="newProjectBtn">＋ New project</button>
+            </div>
+        </header>
+        <main>
+            <div class="intro">
+                <div>
+                    <h1 id="projectHeading">Project</h1>
+                </div>
+            </div>
+            <section class="projects-section" aria-labelledby="projectsTitle">
+                <div class="projects-heading">
+                    <div>
+                        <div class="eyebrow">YOUR LIBRARY</div>
+                        <h2 id="projectsTitle">All projects</h2>
+                    </div>
+                    <span id="projectCount" class="project-count" aria-live="polite">
+                    </span>
+                </div>
+                <div id="projectCards" class="project-grid">
+                </div>
+                <p id="projectCardsEmpty" class="projects-empty" hidden>No saved projects yet. Upload a chart or draw a new one to get started.</p>
+            </section>
+            <section id="emptyProjects" hidden>
+                <h2>No projects</h2>
+                <p>Upload a chart, create a pixel chart, or restore a backup to get started.</p>
+                <button id="emptyUpload" class="primary">New project from image</button>
+                <button id="emptyCreate">Draw chart</button>
+                <button id="emptyRestore">Restore backup</button>
+                <button id="exampleProjectBtn">Use sheep chart example</button>
+            </section>
+            <div class="layout">
+                <section class="chart-card" aria-label="Chart workspace">
+                    <div class="toolbar">
+                        <div class="tools">
+                            <span class="eyebrow">CHART</span>
+                            <button id="editDesignBtn">✎ Edit design</button>
+                            <button id="alignBtn">⌗ Align rows</button>
+                            <button id="focusBtn">Focus</button>
+                        </div>
+                        <div class="tools">
+                            <button id="zoomOut" aria-label="Zoom out">−</button>
+                            <input id="zoom" aria-label="Chart zoom" type="range" min="60" max="400" value="100">
+                            <button id="zoomIn" aria-label="Zoom in">＋</button>
+                            <button id="fitBtn">Fit</button>
+                            <span id="zoomLabel" class="hint">100%</span>
+                        </div>
+                        <div class="focus-controls">
+                            <button id="focusPrev">← Back</button>
+                            <button class="primary" id="focusNext">Next row →</button>
+                            <span id="focusRow">
+                            </span>
+                        </div>
+                    </div>
+                    <div id="alignHelp" class="align-help">Drag the four corner circles to the <b>outside edges of the printed grid</b>, excluding labels and margins. Set the total number of chart rows below, then choose <b>Done aligning</b>.</div>
+                    <div class="canvas-shell" id="canvasShell">
+                        <div class="stage" id="stage">
+                            <img id="chartImg" alt="Your knitting chart">
+                            <svg id="overlay" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-label="Click a chart row to select it">
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="chart-footer">
+                        <span id="chartCaption">ROW 1</span>
+                        <span>Click a row to jump · Space / ↑ next · ↓ back</span>
+                    </div>
+                </section>
+                <aside class="panel">
+                    <section class="card counter">
+                        <div class="eyebrow">Current row</div>
+                        <div class="row-readout">
+                            <strong id="rowNumber" aria-live="polite">1</strong>
+                            <span id="rowTotal">/ 48 rows</span>
+                        </div>
+                        <div id="directionText">← Work right to left</div>
+                        <div class="progress">
+                            <div id="progressBar">
+                            </div>
+                        </div>
+                        <p id="progressText">0 rows completed</p>
+                        <div class="stepper">
+                            <button id="prevBtn" aria-label="Previous row">←</button>
+                            <button id="nextBtn" class="next">Finish row · next →</button>
+                        </div>
+                        <div class="jump">
+                            <label for="jumpRow">Jump to row</label>
+                            <input type="number" id="jumpRow" min="1" value="1">
+                            <button id="jumpBtn">Go</button>
+                            <button id="undoBtn" aria-label="Undo row change">↶</button>
+                        </div>
+                    </section>
+                    <section class="card">
+                        <h2>Chart settings</h2>
+                        <label class="field">Project name<input id="name" maxlength="80" value="Botanical colorwork">
+                        </label>
+                        <div class="two">
+                            <label class="field">Chart rows<input id="rows" type="number" min="1" max="1000" value="48">
+                            </label>
+                            <label class="field">First row at<select id="origin">
+                                    <option value="bottom">Bottom</option>
+                                    <option value="top">Top</option>
+                                </select>
+                            </label>
+                        </div>
+                        <label class="field">Knitting style<select id="style">
+                                <option value="round">In the round · right to left</option>
+                                <option value="flat">Flat · alternate directions</option>
+                                <option value="left">Always left to right</option>
+                            </select>
+                        </label>
+                        <label class="check">
+                            <input type="checkbox" id="dim" checked> Dim surrounding rows</label>
+                        <label class="check">
+                            <input type="checkbox" id="follow" checked> Keep current row in view</label>
+                        <details>
+                            <summary>Highlight & repeat settings</summary>
+                            <label class="field highlight-color">Highlight color<input id="color" type="color" value="#5aa9ff">
+                            </label>
+                            <label class="check">
+                                <input type="checkbox" id="repeat"> Repeat a section</label>
+                            <div class="two repeat-range">
+                                <label class="field">From row<input id="repeatFrom" type="number" min="1" value="1">
+                                </label>
+                                <label class="field">To row<input id="repeatTo" type="number" min="1" value="48">
+                                </label>
+                            </div>
+                            <p class="hint" id="repeatInfo">Repeat section wraps when you finish its last row.</p>
+                        </details>
+                    </section>
+                    <section class="card">
+                        <h2>Notes</h2>
+                        <label class="field">
+                            <textarea id="notes" aria-label="Project notes" placeholder="Yarn colors, a tricky stitch, where you left off…">
+                            </textarea>
+                        </label>
+                        <p class="hint">Progress and images stay in this browser on this device. Export a backup to keep a copy or move to another device.</p>
+                        <div class="backup">
+                            <button id="exportBtn">↓ Export backup</button>
+                            <button id="restoreBtn">↑ Restore backup</button>
+                        </div>
+                    </section>
+                </aside>
+            </div>
+            <footer>
+                <span>Images and progress are stored in this browser.</span>
+                <a id="offlineDownload" href="./Rowkeeper.zip" download>Download offline copy</a>
+            </footer>
+        </main>
+        <input type="file" id="imageFile" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp">
+        <input type="file" id="newProjectFile" accept="image/png,image/jpeg,image/webp,image/gif,image/bmp">
+        <input type="file" id="backupFile" accept="application/json,.json">
+        <div class="notice" id="notice" role="status">
+        </div>
+        <dialog id="newProjectDialog" aria-labelledby="newProjectTitle">
+            <h2 id="newProjectTitle">Start a project</h2>
+            <p class="hint">Choose a chart image for a new project or restore a saved backup.</p>
+            <div class="backup">
+                <button id="chooseImageProject" class="primary">Upload chart image</button>
+                <button id="chooseBackupProject">Restore backup</button>
+            </div>
+            <button id="closeNewProjectDialog">Cancel</button>
+        </dialog>
+        <dialog id="library">
+            <h2>Your projects</h2>
+            <p class="hint">Each chart has its own saved place.</p>
+            <div id="projectList">
+            </div>
+            <div id="projectUndo" hidden>
+                <span id="projectDeleteStatus" role="status">
+                </span>
+                <button id="undoDeleteBtn">Undo delete</button>
+            </div>
+            <button id="closeLibrary">Close</button>
+        </dialog>
+        <dialog id="designer" aria-labelledby="designerTitle">
+            <div class="design-header">
+                <div>
+                    <h2 id="designerTitle">Chart studio</h2>
+                </div>
+                <div class="design-actions">
+                    <span class="hint" id="designSave">Changes save with your project</span>
+                    <button id="designClose">Close</button>
+                    <button class="primary" id="designTrack">Knit this chart →</button>
+                </div>
+            </div>
+            <div class="design-layout">
+                <aside class="design-settings">
+                    <label class="field">Chart name<input id="designName" maxlength="80" value="My pixel chart">
+                    </label>
+                    <div class="two">
+                        <label class="field">Stitches wide<input id="designCols" type="number" min="1" max="120" value="32">
+                        </label>
+                        <label class="field">Rows tall<input id="designRows" type="number" min="1" max="120" value="40">
+                        </label>
+                    </div>
+                    <button id="designResize">Apply grid size</button>
+                    <p class="hint design-resize-hint">1–120 stitches × 1–120 rows. Resizing keeps the bottom-left of your design. Undo restores cropped stitches.</p>
+                    <div class="eyebrow">Tools</div>
+                    <div class="design-tools" role="group" aria-label="Drawing tools">
+                        <button data-tool="pencil" aria-pressed="true">✎ Draw</button>
+                        <button data-tool="eraser" aria-pressed="false">Erase</button>
+                        <button data-tool="fill" aria-pressed="false">▧ Fill area</button>
+                        <button data-tool="pick" aria-pressed="false">Pick color</button>
+                    </div>
+                    <div class="eyebrow yarn-colors-label">Yarn colors</div>
+                    <div id="designPalette" aria-label="Color palette">
+                    </div>
+                    <label class="field drawing-color">Drawing color<input id="designColor" type="color" value="#315b49">
+                    </label>
+                    <button id="designAddColor">＋ Add color to palette</button>
+                    <label class="check">
+                        <input id="designMirror" type="checkbox"> Mirror stitches left ↔ right</label>
+                    <p class="hint mirror-hint">Draw and erase on both sides at once.</p>
+                    <div class="backup">
+                        <button id="designUndo">↶ Undo</button>
+                        <button id="designRedo">↷ Redo</button>
+                        <button id="designClear">Clear grid</button>
+                    </div>
+                    <div class="design-export">
+                        <button id="designExport">↓ Download chart PNG</button>
+                        <p class="hint">Your editable cells are included in project backups, too.</p>
+                    </div>
+                </aside>
+                <section class="design-workspace">
+                    <div class="design-toolbar">
+                        <span id="designDimensions" class="tag">32 stitches × 40 rows</span>
+                        <div class="tools">
+                            <button id="designZoomOut" aria-label="Smaller cells">−</button>
+                            <span id="designZoomLabel" class="hint">18px</span>
+                            <button id="designZoomIn" aria-label="Larger cells">＋</button>
+                            <button id="designFit">Fit grid</button>
+                        </div>
+                    </div>
+                    <div class="design-scroll" id="designScroll">
+                        <canvas id="pixelCanvas" tabindex="0" role="application" aria-label="Pixel chart editor. Arrow keys move the selected stitch. Space paints. Delete erases." aria-describedby="designKeys">
+                        </canvas>
+                    </div>
+                    <div class="design-bottom">
+                        <span id="designCell" aria-live="polite">Choose a color, then click or drag to draw.</span>
+                        <span id="designKeys">Drag to draw · Arrows move · Space paints · Delete erases</span>
+                    </div>
+                </section>
+            </div>
+        </dialog>
+
+        <script src="app.js"></script>
+    </body>
+</html>

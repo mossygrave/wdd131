@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Site plan for Rowkeeper, a browser-based knitting chart tracker.">
+  <title>Rowkeeper App Plan</title>
+  <link rel="stylesheet" href="styles/site-plan.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="brand-mark"><img src="images/rowkeeper-icon.png" alt="Rowkeeper icon"></div>
+    <div>
+      <p class="eyebrow">WDD 131 · App plan</p>
+      <h1>Rowkeeper</h1>
+      <p class="subtitle">A simple, visual way to keep your place in knitting and crochet colorwork charts.</p>
+    </div>
+  </header>
+
+  <main>
+    <section class="plan-section" aria-labelledby="purpose-heading">
+      <p class="eyebrow">01 · Purpose and audience</p>
+      <p>Rowkeeper helps knitters and crocheters upload or draw a chart, highlight the row they are working on, and save their progress directly in the browser. The project library makes it easy to return to a saved chart, switch between works in progress, and separate active projects from completed ones.</p>
+      <p>The intended audience is anyone who works from knitting or crochet colorwork and pixel-style charts and wants a focused digital companion while crafting. It is designed for beginners who need clear row guidance as well as experienced makers who want a lightweight, offline-friendly project tracker.</p>
+    </section>
+
+    <section class="plan-section" aria-labelledby="dynamic-heading">
+      <p class="eyebrow">02 · Dynamic elements</p>
+      <div class="feature-grid">
+        <article class="feature-card"><h3>Project library</h3><p>JavaScript reads the saved project array and creates image-based cards with a title, row progress, completion state, and controls.</p></article>
+        <article class="feature-card"><h3>Chart tracking</h3><p>Buttons and keyboard controls update the current row, progress bar, direction, repeat behavior, and chart overlay.</p></article>
+        <article class="feature-card"><h3>Saved data</h3><p>IndexedDB stores projects, images, notes, settings, drawn chart cells, and progress so the app can work on the same device without an account.</p></article>
+        <article class="feature-card"><h3>Project states</h3><p>Conditional logic moves completed projects into their own library section and lets users return them to the active list.</p></article>
+      </div>
+    </section>
+
+    <section class="plan-section" aria-labelledby="pseudocode-heading">
+      <p class="eyebrow">03 · Pseudocode</p>
+      <pre class="pseudocode"><code>START application
+  open the browser database
+  IF saved projects exist
+    load the projects array
+    activate the last open project
+  ELSE
+    show the empty project state
+
+  WHEN the user opens My projects
+    split projects into active and completed arrays
+    create a card for each project
+    show active cards first and completed cards below
+
+  WHEN the user selects a project card
+    set that project as active
+    show its chart image and saved settings
+
+  WHEN the user finishes a row
+    update the current row and progress
+    apply repeat or completed logic when needed
+    save the project to the browser database
+
+  WHEN the user marks a project complete
+    change the project's complete value
+    re-render the active and completed sections
+    save the new project state
+
+  WHEN the user deletes a project
+    ask for confirmation
+    remove the project from the projects array
+    update the library and save the database
+END application</code></pre>
+    </section>
+
+    <section class="plan-section" aria-labelledby="wireframe-heading">
+      <p class="eyebrow">04 · Wireframe</p>
+      <p>The main chart view and the in-page project library use the same header and switch through the “My projects” button.</p>
+      <figure class="wireframe-card">
+        <img src="images/wireframe.svg" alt="Wireframe showing the Rowkeeper chart workspace and project library with active and completed project sections.">
+        <figcaption>Mobile-first wireframe: chart workspace above, project library below the view switch.</figcaption>
+      </figure>
+    </section>
+  </main>
+
+  <footer class="site-footer">Rowkeeper · WDD 131 App Plan</footer>
+</body>
+</html>

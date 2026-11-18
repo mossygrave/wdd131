@@ -1,0 +1,86 @@
+:root {
+  --ink: #253b31;
+  --green: #315b49;
+  --muted: #758076;
+  --paper: #f7f6f0;
+  --card: #fffefb;
+  --line: #dedfd5;
+  --lime: #dfea96;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 16px/1.6 system-ui, sans-serif;
+}
+
+.site-header,
+main,
+.site-footer { width: min(1100px, calc(100% - 32px)); margin-inline: auto; }
+
+.site-header {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  padding: 42px 0 34px;
+  border-bottom: 1px solid var(--line);
+}
+
+.brand-mark {
+  display: grid;
+  width: 58px;
+  height: 58px;
+  place-items: center;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--card);
+  font-size: 28px;
+}
+
+.brand-mark img { width: 42px; height: 42px; object-fit: contain; }
+
+h1, h2, h3 { font-family: Georgia, serif; line-height: 1.15; }
+h1 { margin: 0; font-size: clamp(2.2rem, 6vw, 4rem); }
+h2 { margin: 8px 0 14px; font-size: clamp(1.7rem, 3vw, 2.4rem); }
+h3 { margin: 0 0 8px; font-size: 1.25rem; }
+p { max-width: 72ch; margin: 0 0 12px; color: var(--muted); }
+
+.eyebrow { margin: 0; color: #788261; font-size: .72rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; }
+.subtitle { margin: 4px 0 0; }
+
+.plan-section { padding: 42px 0; border-bottom: 1px solid var(--line); }
+.feature-grid { display: grid; grid-template-columns: 1fr; gap: 14px; margin-top: 22px; }
+.feature-card,
+.wireframe-card { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: var(--card); }
+.feature-card p { margin: 0; font-size: .95rem; }
+
+.pseudocode {
+  margin: 22px 0 0;
+  overflow-x: auto;
+  padding: 20px;
+  border: 1px solid #cfd6c7;
+  border-radius: 12px;
+  background: #243c30;
+  color: #f2f4dd;
+  font: .86rem/1.7 ui-monospace, SFMono-Regular, Menlo, monospace;
+  white-space: pre-wrap;
+}
+
+.wireframe-card { margin: 22px 0 0; }
+.wireframe-card img { display: block; width: 100%; height: auto; }
+figcaption { margin-top: 12px; color: var(--muted); font-size: .9rem; }
+.site-footer { padding: 24px 0 42px; color: var(--muted); font-size: .85rem; }
+
+@media (min-width: 650px) {
+  .site-header,
+  main,
+  .site-footer { width: min(1100px, calc(100% - 64px)); }
+  .feature-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; }
+}
