@@ -1,0 +1,80 @@
+ROWKEEPER
+
+Open index.html in Microsoft Edge or Google Chrome. This local copy works offline;
+it needs no account or server.
+For the hosted HTTPS site, visit once while online so it can cache the app for offline use.
+Use the browser menu to install the app or add it to your home screen.
+
+No example chart is included. Start by uploading your own chart or creating a pixel chart.
+
+GET STARTED
+1. For an uploaded chart, click Align rows. Drag the four numbered circles to the outside corners
+   of the chart grid, leaving printed labels and margins outside the grid.
+2. Enter the total number of rows in Chart rows. The example starts with
+   48 as an editable setting; confirm this against your pattern.
+3. Choose whether row 1 is at the bottom or top. Click Done aligning.
+4. Use Jump to row to resume where you are, then Finish row to advance.
+   You can also click a row directly. Space or Up moves forward; Down
+   moves back when you are not editing a field or using another control.
+
+MORE CONTROLS
+- Zoom and Fit help you see the stitches. Scroll when zoomed in.
+- Focus hides the side panels and provides row controls above the chart.
+- Flat knitting alternates the displayed working direction each row.
+- Highlight & repeat settings let you change the highlight color or loop
+  through a selected row range.
+- New project uploads a chart into a separate project. My projects switches charts.
+- The curved arrow beside Go undoes recent row changes during this session.
+
+CREATE YOUR OWN CHART
+- Click Draw chart to start a blank pixel chart as a new saved project.
+- Enter stitches wide and rows tall (1-120 each), then Apply grid size.
+- Choose a yarn color. Click or drag on the grid to draw stitches.
+- Erase removes stitches to the cream background. Fill area colors a
+  connected area. Pick color samples an existing stitch.
+- Mirror stitches draws and erases matching stitches on the other side.
+- Undo/Redo work on whole strokes, fills, clearing, and resizing. Resizing
+  keeps the bottom-left; Undo can restore stitches cropped by resizing.
+- Fit grid and the minus/plus buttons control your drawing cell size.
+- On the focused grid, arrows move the selected stitch, Space paints,
+  and Delete erases. Ctrl+Z (or Cmd+Z) undoes; add Shift to redo.
+- Knit this chart returns to the row tracker with exact row alignment.
+- Edit design reopens your chart. Edits save with the project, including
+  when you close the studio without choosing Knit this chart.
+- Download chart PNG exports an image with row and stitch numbers.
+- Export backup also preserves editable pixel cells and palette colors.
+  Use that backup to move an editable design to another browser/device.
+- While working on a generated chart, change its row count in Edit design.
+
+SAVING YOUR WORK
+Images, notes, and progress are stored in this browser on this device.
+They do not sync between devices or browsers. Private browsing, clearing
+browser data, or moving/renaming this HTML file can affect saved storage.
+The top bar reports whether saving succeeded.
+
+Use Export backup regularly. Each backup includes the current project's
+image, settings, notes, and progress. Restore backup adds a new project,
+so your existing project is preserved. Export each project separately.
+
+ABOUT THIS VERSION
+For uploaded images, the app does not recognize stitches or automatically
+count rows. You set the row count and align the grid. Charts created in
+the pixel studio carry their row count and alignment automatically.
+Alignment handles accommodate slanted grid edges, though a severely
+distorted photo may need to be retaken flat for precise alignment.
+
+Hosted publishing was unavailable because Sites is not enabled for this
+workspace. This self-contained version is ready to use locally.
+
+DELETE PROJECTS
+Open My projects and choose Delete beside a project. Undo delete restores
+the most recently deleted project during the current session, including
+its chart, notes, and progress. Deletions are saved in this browser.
+
+
+REPLACE AN IMAGE
+Replace chart updates the image in the current project, keeping its name,
+notes, row count, settings, and progress. Align the new image afterward.
+For a pixel chart, replacement switches that project to image tracking.
+New project uploads an image as a separate project starting at row 1.
+
